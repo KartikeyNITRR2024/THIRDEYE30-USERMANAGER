@@ -15,7 +15,7 @@ import lombok.Setter;
 public class AuthUserPayload {
 
     @NotBlank(message = "Username must not be blank")
-    @Size(max = 8, message = "Username must not exceed 8 characters")
+    @Size(min = 8, message = "Username must not less than 8 characters")
     private String userName;
 
     @NotBlank(message = "Password must not be blank")
