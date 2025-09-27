@@ -40,7 +40,7 @@ public class PropertyServiceImpl implements PropertyService {
             maximumNoOfThresoldPerGroup = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_THRESOLD_PER_GROUP", 10L)).longValue();
             maximumNoOfHoldedStockPerUser = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", 10L)).longValue();
             maximumNoOfGroupPerUser = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", 10L)).longValue();
-            String timeGapListForThresoldInSecondsString = (String) properties.getOrDefault("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", "60, 120, 180");
+            String timeGapListForThresoldInSecondsString = properties.getOrDefault("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", "60, 120, 180").toString();
             Set<Long> timeGapSetForThresholdInSeconds = Arrays.stream(timeGapListForThresoldInSecondsString.split(","))
                     .map(String::trim)
                     .map(Long::parseLong)
