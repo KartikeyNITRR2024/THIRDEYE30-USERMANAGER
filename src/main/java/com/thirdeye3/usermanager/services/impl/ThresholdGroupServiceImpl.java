@@ -171,7 +171,6 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
             List<Threshold> thresholds = thresholdGroup.getThresholds();
             thresholds.size();
             List<TelegramChatId> telegramChatIds = thresholdGroup.getTelegramChatIds();
-            telegramChatIds.size();
             thresholdGroupDto.setThresholds(mapper.toThresholdDtoList(thresholds));
             messageSender.sendTelegramMessage(
                 thresholdGroup.getUser().getFirstName(),

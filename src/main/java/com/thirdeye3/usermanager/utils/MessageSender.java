@@ -33,7 +33,7 @@ public class MessageSender {
                 .append(".</b>\n\n");
 
         for (Threshold t : thresholds) {
-            message.append("✅ <b>")
+            message.append("✅ <b>");
             if(t.getTimeGapInSeconds() == -1)
             {
             	message.append("Previous closing day price & ");

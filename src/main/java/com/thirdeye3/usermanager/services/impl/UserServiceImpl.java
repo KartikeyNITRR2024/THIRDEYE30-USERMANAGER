@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             logger.warn("User with id={} is inactive", userId);
             throw new UserNotFoundException("User with id " + userId + " is inactive");
         }
+        
+        if (Boolean.TRUE.equals(user.getFirstLogin())) {
+            logger.warn("User with id={} is not updated Name and Mobile Number", userId);
+            throw new UserNotFoundException("User with id " + userId + " is not updated Name and Mobile Number");
+        }
 
         return user;
     }
