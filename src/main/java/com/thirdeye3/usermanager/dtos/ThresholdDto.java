@@ -18,8 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ThresholdDto {
     private Long id;
-    
-    @NotNull(message = "Threshold group is required")
+
     private ThresholdGroupDto thresholdGroup;
 
     @NotNull(message = "Time gap is required")
