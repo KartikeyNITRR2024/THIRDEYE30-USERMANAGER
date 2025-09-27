@@ -85,7 +85,10 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
                     "Invalid stock list");
         }
         entity.setUser(user);
-        entity.setStockList(StockListSorter.shorter(entity.getStockList()));
+        if(!entity.getAllStocks())
+        {
+        	entity.setStockList(StockListSorter.shorter(entity.getStockList()));
+        }
         ThresholdGroup saved = thresholdGroupRepository.save(entity);
         logger.info("Added ThresholdGroup id={} for userId={}", saved.getId(), user.getUserId());
         return mapper.toDto(saved);
