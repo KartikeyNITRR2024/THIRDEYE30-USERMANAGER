@@ -34,7 +34,6 @@ public class ThresholdGroupDto {
     @NotNull(message = "AllStocks is required")
     private Boolean allStocks;
 
-    @NotBlank(message = "Stock list is required")
     @Pattern(regexp = "^(\\d{5})*$", message = "Invalid stock list")
     private String stockList;
 }
