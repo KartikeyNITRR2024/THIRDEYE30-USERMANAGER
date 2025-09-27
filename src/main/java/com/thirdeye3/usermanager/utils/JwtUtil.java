@@ -4,6 +4,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Component
 public class JwtUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     @Value("${thirdeye.jwt.secret}")
     private String secret;
@@ -28,6 +32,8 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, Long userId, List<String> roles) {
+    	logger.info("SECRET KEY IS "+secret);
+    	logger.info("SECRET KEY LENGTH IS "+secret.length());
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
