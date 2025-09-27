@@ -79,15 +79,14 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
                     "Maximum number of group reached");
         }
         ThresholdGroup entity = mapper.toEntity(thresholdGroupDto);
-        if(entity.getAllStocks() == true && (entity.getStockList() != null || entity.getStockList().length()>0))
-        {
-        	throw new ThresholdGroupNotFoundException(
-                    "Invalid stock list");
-        }
         entity.setUser(user);
         if(!entity.getAllStocks())
         {
         	entity.setStockList(StockListSorter.shorter(entity.getStockList()));
+        }
+        else
+        {
+        	entity.setStockList("");
         }
         ThresholdGroup saved = thresholdGroupRepository.save(entity);
         logger.info("Added ThresholdGroup id={} for userId={}", saved.getId(), user.getUserId());
