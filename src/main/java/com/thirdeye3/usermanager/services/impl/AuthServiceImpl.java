@@ -112,14 +112,8 @@ public class AuthServiceImpl implements AuthService {
         List<String> roles = user.getRoles().stream()
                 .map(Role::getName)
                 .toList();
-
-        logger.info("TOKEN STARTER IS " + tokenStarter+"*");
-        logger.info("TOKEN STARTER LENGTH IS " + tokenStarter.length());
         String token = tokenStarter+jwtUtil.generateToken(user.getUserName(), user.getUserId(), roles);
-        logger.info("TOKEN IS " + token);
-        logger.info("TOKEN LENGTH IS " + token.length());
-        logger.info("User logged in successfully: {}", user.getUserName());
-        logger.debug("Generated JWT token for user {} with roles {}", user.getUserName(), roles);
+        logger.debug("Generated JWT token for user {} with roles {} for userId {}", user.getUserName(), roles, user.getUserId());
         return new LoginResponsePayload(token, user.getUserName(), user.getFirstName(), user.getLastName(), roles, user.getFirstLogin());
     }
 }
