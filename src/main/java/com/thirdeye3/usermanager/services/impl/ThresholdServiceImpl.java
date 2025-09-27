@@ -49,7 +49,7 @@ public class ThresholdServiceImpl implements ThresholdService {
         {
         	throw new ThresholdNotFoundException("Maximum number of thresold used");
         }
-        if(!propertyService.getTimeGapListForThresoldInSeconds().contains(thresholdDto.getTimeGapInSeconds()))
+        if(!propertyService.getTimeGapListForThresoldInSeconds().contains(thresholdDto.getTimeGapInSeconds()) && thresholdDto.getTimeGapInSeconds() != -1 && thresholdDto.getTimeGapInSeconds() !=-2)
         {
         	throw new ThresholdNotFoundException("Invalid time gap");
         }

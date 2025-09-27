@@ -34,10 +34,20 @@ public class MessageSender {
 
         for (Threshold t : thresholds) {
             message.append("✅ <b>")
-                    .append(escapeHtml(String.valueOf(t.getTimeGapInSeconds())))
-                    .append(" seconds & ")
-                    .append(escapeHtml(String.valueOf(t.getPriceGap())));
-            
+            if(t.getTimeGapInSeconds() == -1)
+            {
+            	message.append("Previous closing day price & ");
+            }
+            else if (t.getTimeGapInSeconds() == -2)
+            {
+            	message.append("Current opening day price & ");
+            }
+            else
+            {
+                message.append(escapeHtml(String.valueOf(t.getTimeGapInSeconds())))
+                .append(" seconds & ");
+            }
+            message.append(escapeHtml(String.valueOf(t.getPriceGap())));
             if (t.getType() == 0) {
                 message.append(" %</b>\n");
             } else {
