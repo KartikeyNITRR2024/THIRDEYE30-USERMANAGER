@@ -28,10 +28,10 @@ public class ThresholdGroup {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "thresholdGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "thresholdGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TelegramChatId> telegramChatIds;
 
-    @OneToMany(mappedBy = "thresholdGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "thresholdGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Threshold> thresholds;
 
     @Column(name = "ACTIVE", nullable = false)
