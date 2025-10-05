@@ -41,10 +41,13 @@ public class PropertyServiceImpl implements PropertyService {
             maximumNoOfHoldedStockPerUser = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", 10L)).longValue();
             maximumNoOfGroupPerUser = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", 10L)).longValue();
             String timeGapListForThresoldInSecondsString = properties.getOrDefault("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", "60, 120, 180").toString();
-            timeGapListForThresoldInSeconds = Arrays.stream(timeGapListForThresoldInSecondsString.split(","))
-                    .map(String::trim)
-                    .map(Long::parseLong)
-                    .collect(Collectors.toSet());
+            if(timeGapListForThresoldInSecondsString != null && timeGapListForThresoldInSecondsString.length()>0)
+            {
+                timeGapListForThresoldInSeconds = Arrays.stream(timeGapListForThresoldInSecondsString.split(","))
+                        .map(String::trim)
+                        .map(Long::parseLong)
+                        .collect(Collectors.toSet());
+            }
             logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}",
                     properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds);
         } else {
