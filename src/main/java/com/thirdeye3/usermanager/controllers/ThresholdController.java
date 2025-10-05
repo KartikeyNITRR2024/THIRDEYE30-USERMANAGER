@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/um/thresholds")
+@RequestMapping("/um/user/thresholds")
 public class ThresholdController {
 
     private static final Logger logger = LoggerFactory.getLogger(ThresholdController.class);

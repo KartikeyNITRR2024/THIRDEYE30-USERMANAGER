@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/um/telegram-chat-ids")
+@RequestMapping("/um/user/telegram-chat-ids")
 public class TelegramChatIdController {
 
     private static final Logger logger = LoggerFactory.getLogger(TelegramChatIdController.class);
