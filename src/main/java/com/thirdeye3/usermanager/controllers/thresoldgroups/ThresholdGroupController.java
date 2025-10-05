@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/um/threshold-groups")
+@RequestMapping("/um/user/threshold-groups")
 public class ThresholdGroupController {
 
     private static final Logger logger = LoggerFactory.getLogger(ThresholdGroupController.class);

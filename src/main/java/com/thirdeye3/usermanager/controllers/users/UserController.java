@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/um/users")
+@RequestMapping("/um/user/users")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
