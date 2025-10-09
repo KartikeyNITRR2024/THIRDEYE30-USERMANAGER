@@ -8,12 +8,12 @@ import java.util.Optional;
 
 public interface ThresholdService {
 
-	ThresholdDto createThreshold(Long thresoldGroupId, ThresholdDto thresholdDto);
+	ThresholdDto createThreshold(Long thresoldGroupId, ThresholdDto thresholdDto, Long requesterId);
 
-    ThresholdDto getThresholdById(Long id);
+    ThresholdDto getThresholdById(Long id, Long requesterId);
 
-    void deleteThresholdById(Long id);
+    void deleteThresholdById(Long id, Long requesterId);
 
-    List<ThresholdDto> getThresholdsByGroupId(Long groupId);
+    List<ThresholdDto> getThresholdsByGroupId(Long groupId, Long requesterId);
 
 }

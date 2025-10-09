@@ -9,9 +9,9 @@ import java.util.Map;
 
 public interface TelegramChatIdService {
 
-	TelegramChatIdDto addTelegramChatId(Long thresholdGroupId, TelegramChatIdDto dto);
+	TelegramChatIdDto addTelegramChatId(Long thresholdGroupId, TelegramChatIdDto dto, Long requesterId);
 
-    void deleteTelegramChatId(Long id);
+    void deleteTelegramChatId(Long id, Long requesterId);
 
-    List<TelegramChatIdDto> getTelegramChatIdsByThresholdGroupId(Long thresholdGroupId);
+    List<TelegramChatIdDto> getTelegramChatIdsByThresholdGroupId(Long thresholdGroupId, Long requesterId);
 }

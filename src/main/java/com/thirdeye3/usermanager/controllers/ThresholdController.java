@@ -22,23 +22,26 @@ public class ThresholdController {
 
     @PostMapping("/group/{groupId}")
     public Response<ThresholdDto> createThreshold(@PathVariable("groupId") Long groupId,
-                                                  @Valid @RequestBody ThresholdDto thresholdDto) {
+                                                  @Valid @RequestBody ThresholdDto thresholdDto,
+                                                  @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Creating new threshold for group id {}", groupId);
-        ThresholdDto saved = thresholdService.createThreshold(groupId, thresholdDto);
+        ThresholdDto saved = thresholdService.createThreshold(groupId, thresholdDto, requesterId);
         return new Response<>(true, 0, null, saved);
     }
 
     @DeleteMapping("/{id}")
-    public Response<Void> deleteThresholdById(@PathVariable("id") Long id) {
+    public Response<Void> deleteThresholdById(@PathVariable("id") Long id,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Deleting threshold with ID {}", id);
-        thresholdService.deleteThresholdById(id);
+        thresholdService.deleteThresholdById(id, requesterId);
         return new Response<>(true, 0, null, null);
     }
 
     @GetMapping("/group/{groupId}")
-    public Response<List<ThresholdDto>> getThresholdsByGroupId(@PathVariable("groupId") Long groupId) {
+    public Response<List<ThresholdDto>> getThresholdsByGroupId(@PathVariable("groupId") Long groupId,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Fetching thresholds for group {}", groupId);
-        List<ThresholdDto> thresholds = thresholdService.getThresholdsByGroupId(groupId);
+        List<ThresholdDto> thresholds = thresholdService.getThresholdsByGroupId(groupId, requesterId);
         return new Response<>(true, 0, null, thresholds);
     }
 }

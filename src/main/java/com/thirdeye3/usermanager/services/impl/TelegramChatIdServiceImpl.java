@@ -33,9 +33,9 @@ public class TelegramChatIdServiceImpl implements TelegramChatIdService {
     private final Mapper mapper = new Mapper();
 
     @Override
-    public TelegramChatIdDto addTelegramChatId(Long thresholdGroupId, TelegramChatIdDto dto) {
+    public TelegramChatIdDto addTelegramChatId(Long thresholdGroupId, TelegramChatIdDto dto, Long requesterId) {
         logger.info("Adding TelegramChatId for thresholdGroupId={}", thresholdGroupId);
-        ThresholdGroup group = thresholdGroupService.getThresholdGroupByThresoldGroupId(thresholdGroupId);
+        ThresholdGroup group = thresholdGroupService.getThresholdGroupByThresoldGroupId(thresholdGroupId, requesterId);
         TelegramChatId entity = mapper.toEntity(dto);
         entity.setThresholdGroup(group);
         TelegramChatId saved = telegramChatIdRepository.save(entity);
@@ -44,16 +44,18 @@ public class TelegramChatIdServiceImpl implements TelegramChatIdService {
     }
     
     @Override
-    public void deleteTelegramChatId(Long id) {
+    public void deleteTelegramChatId(Long id, Long requesterId) {
         logger.info("Deleting chat id with id={}", id);
         TelegramChatId telegramChatId = telegramChatIdRepository.findById(id)
                 .orElseThrow(() -> new TelegramChatIdNotFoundException("Telegram Chat ID not found with id: " + id));
+        ThresholdGroup group = thresholdGroupService.getThresholdGroupByThresoldGroupId(telegramChatId.getThresholdGroup().getId(), requesterId);
         telegramChatIdRepository.delete(telegramChatId);
         thresholdGroupService.sendThresholdToOtherMicroservices(2, telegramChatId.getThresholdGroup().getId(), "updated");
     }
 
     @Override
-    public List<TelegramChatIdDto> getTelegramChatIdsByThresholdGroupId(Long thresholdGroupId) {
+    public List<TelegramChatIdDto> getTelegramChatIdsByThresholdGroupId(Long thresholdGroupId, Long requesterId) {
+    	ThresholdGroup group = thresholdGroupService.getThresholdGroupByThresoldGroupId(thresholdGroupId, requesterId);
         return mapper.toTelegramChatIdDtoList(
                 telegramChatIdRepository.findByThresholdGroupId(thresholdGroupId)
         );

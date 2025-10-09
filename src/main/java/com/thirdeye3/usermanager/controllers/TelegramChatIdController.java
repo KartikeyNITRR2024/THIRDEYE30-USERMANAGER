@@ -23,24 +23,26 @@ public class TelegramChatIdController {
     @PostMapping("/{thresholdGroupId}")
     public Response<TelegramChatIdDto> addTelegramChatId(
             @PathVariable("thresholdGroupId") Long thresholdGroupId,
-            @Valid @RequestBody TelegramChatIdDto dto) {
-
+            @Valid @RequestBody TelegramChatIdDto dto,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Adding TelegramChatId for thresholdGroupId {}", thresholdGroupId);
-        TelegramChatIdDto saved = telegramChatIdService.addTelegramChatId(thresholdGroupId, dto);
+        TelegramChatIdDto saved = telegramChatIdService.addTelegramChatId(thresholdGroupId, dto, requesterId);
         return new Response<>(true, 0, null, saved);
     }
 
     @DeleteMapping("/{id}")
-    public Response<Void> deleteTelegramChatId(@PathVariable("id") Long id) {
+    public Response<Void> deleteTelegramChatId(@PathVariable("id") Long id,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Deleting TelegramChatId {}", id);
-        telegramChatIdService.deleteTelegramChatId(id);
+        telegramChatIdService.deleteTelegramChatId(id, requesterId);
         return new Response<>(true, 0, null, null);
     }
 
     @GetMapping("/group/{groupId}")
-    public Response<List<TelegramChatIdDto>> getTelegramChatIdsByGroupId(@PathVariable("groupId") Long groupId) {
+    public Response<List<TelegramChatIdDto>> getTelegramChatIdsByGroupId(@PathVariable("groupId") Long groupId,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Fetching TelegramChatIds for threshold group {}", groupId);
-        List<TelegramChatIdDto> chatIds = telegramChatIdService.getTelegramChatIdsByThresholdGroupId(groupId);
+        List<TelegramChatIdDto> chatIds = telegramChatIdService.getTelegramChatIdsByThresholdGroupId(groupId, requesterId);
         return new Response<>(true, 0, null, chatIds);
     }
 }
