@@ -24,11 +24,19 @@ public class Initiatier {
 
     @Value("${thirdeye.priority}")
     private Integer priority;
+    
+    @Value("${thirdeye.jwt.secret}")
+    private String secretKey;
+
+    @Value("${thirdeye.jwt.token.starter}")
+    private String starter;
 	
 	@PostConstruct
     public void init() throws Exception{
         logger.info("Initializing Initiatier...");
     	TimeUnit.SECONDS.sleep(priority * 3);
+        logger.info("Starter is {} and length is {}", starter, starter.length());
+        logger.info("Secret key is {} and length is {}", secretKey, secretKey.length());
         propertyService.fetchProperties();
         logger.info("Initiatier initialized.");
     }
