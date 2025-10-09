@@ -32,11 +32,8 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, Long userId, List<String> roles) {
-    	logger.info("SECRET KEY IS "+secret);
-    	logger.info("SECRET KEY LENGTH IS "+secret.length());
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
-
         return Jwts.builder()
                 .setSubject(username)
                 .claim("userId", userId)
