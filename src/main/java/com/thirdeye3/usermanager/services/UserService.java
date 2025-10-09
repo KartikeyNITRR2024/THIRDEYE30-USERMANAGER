@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserService {
 	User getUserByUserId(Long userId);
-    UserDto updateUser(Long userId, UserDto userDto);
+    UserDto updateUser(Long userId, UserDto userDto, Long requesterId);
     void deleteUser(Long userId);
     void activateUser(Long userId);
     void deactivateUser(Long userId);

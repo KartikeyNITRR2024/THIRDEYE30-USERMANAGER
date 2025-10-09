@@ -21,10 +21,10 @@ public class UserController {
     @PutMapping("/{userId}")
     public Response<UserDto> updateUser(
             @PathVariable("userId") Long userId,
-            @Valid @RequestBody UserDto userDto) {
-
+            @Valid @RequestBody UserDto userDto,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Updating user with ID: {}", userId);
-        UserDto updatedUser = userService.updateUser(userId, userDto);
+        UserDto updatedUser = userService.updateUser(userId, userDto, requesterId);
         return new Response<>(true, 0, null, updatedUser);
     }
 }

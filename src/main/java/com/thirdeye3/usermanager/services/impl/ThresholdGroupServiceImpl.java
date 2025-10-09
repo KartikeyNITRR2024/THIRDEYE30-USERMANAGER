@@ -5,6 +5,7 @@ import com.thirdeye3.usermanager.entities.TelegramChatId;
 import com.thirdeye3.usermanager.entities.Threshold;
 import com.thirdeye3.usermanager.entities.ThresholdGroup;
 import com.thirdeye3.usermanager.entities.User;
+import com.thirdeye3.usermanager.exceptions.ForbiddenException;
 import com.thirdeye3.usermanager.exceptions.ThresholdGroupNotFoundException;
 import com.thirdeye3.usermanager.repositories.ThresholdGroupRepository;
 import com.thirdeye3.usermanager.services.MessengerService;
@@ -67,12 +68,38 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
 
         return group;
     }
+    
+    @Override
+    public ThresholdGroup getThresholdGroupByThresoldGroupId(Long thresholdGroupId, Long requesterId) {
+        logger.info("Fetching ThresholdGroup by id={}", thresholdGroupId);
+
+        ThresholdGroup group = thresholdGroupRepository.findById(thresholdGroupId)
+                .orElseThrow(() -> new ThresholdGroupNotFoundException(
+                        "Threshold Group not found with id: " + thresholdGroupId));
+        
+        if(requesterId.longValue() != group.getUser().getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
+
+        if (!Boolean.TRUE.equals(group.getActive())) {
+            logger.warn("ThresholdGroup with id={} is inactive", thresholdGroupId);
+            throw new ThresholdGroupNotFoundException(
+                    "Threshold Group with id " + thresholdGroupId + " is inactive");
+        }
+
+        return group;
+    }
 
 
     @Override
-    public ThresholdGroupDto addThresholdGroup(Long userId, ThresholdGroupDto thresholdGroupDto) {
+    public ThresholdGroupDto addThresholdGroup(Long userId, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
         logger.info("Adding ThresholdGroup for userId={}", userId);
         User user = userService.getUserByUserId(userId);
+        if(requesterId.longValue() != user.getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
         if(thresholdGroupRepository.countActiveByUserId(user.getUserId()) >= propertyService.getMaximumNoOfGroupPerUser())
         {
         	throw new ThresholdGroupNotFoundException(
@@ -94,10 +121,15 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
     }
 
     @Override
-    public ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto) {
+    public ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
         logger.info("Updating ThresholdGroup id={}", id);
         ThresholdGroup existing = thresholdGroupRepository.findById(id)
                 .orElseThrow(() -> new ThresholdGroupNotFoundException("Threshold Group not found with id: " + id));
+        if(requesterId.longValue() != existing.getUser().getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
+        
         if(existing.getAllStocks() == true && (existing.getStockList() != null || existing.getStockList().length()>0))
         {
         	throw new ThresholdGroupNotFoundException(
@@ -113,23 +145,37 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
     }
 
     @Override
-    public void removeThresholdGroup(Long id) {
+    public void removeThresholdGroup(Long id, Long requesterId) {
         logger.info("Removing ThresholdGroup id={}", id);
+        ThresholdGroup existing = thresholdGroupRepository.findById(id)
+                .orElseThrow(() -> new ThresholdGroupNotFoundException("Threshold Group not found with id: " + id));
+        if(requesterId.longValue() != existing.getUser().getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
         thresholdGroupRepository.deleteById(id);
         logger.info("Removed ThresholdGroup id={}", id);
     }
 
     @Override
-    public ThresholdGroupDto getThresholdGroup(Long id) {
+    public ThresholdGroupDto getThresholdGroup(Long id, Long requesterId) {
         logger.info("Fetching ThresholdGroup id={}", id);
-        ThresholdGroup thresholdGroup = thresholdGroupRepository.findById(id)
+        ThresholdGroup existing = thresholdGroupRepository.findById(id)
                 .orElseThrow(() -> new ThresholdGroupNotFoundException("Threshold Group not found with id: " + id));
-        return mapper.toDto(thresholdGroup);
+        if(requesterId.longValue() != existing.getUser().getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
+        return mapper.toDto(existing);
     }
 
     @Override
-    public List<ThresholdGroupDto> getThresholdGroupsByUserId(Long userId) {
+    public List<ThresholdGroupDto> getThresholdGroupsByUserId(Long userId, Long requesterId) {
         logger.info("Fetching ThresholdGroups for userId={}", userId);
+        if(requesterId.longValue() != userId.longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
         List<ThresholdGroup> groups = thresholdGroupRepository.findByUserUserId(userId);
         return mapper.toThresholdGroupDtoList(groups);
     }

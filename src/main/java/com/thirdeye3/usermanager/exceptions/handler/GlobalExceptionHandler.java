@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.thirdeye3.usermanager.dtos.Response;
+import com.thirdeye3.usermanager.exceptions.ForbiddenException;
 import com.thirdeye3.usermanager.exceptions.MessageBrokerException;
 import com.thirdeye3.usermanager.exceptions.PropertyFetchException;
 import com.thirdeye3.usermanager.exceptions.RoleNotFoundException;
@@ -120,6 +121,19 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Response<Void>> handleForbiddenException(ForbiddenException ex) {
+        Response<Void> response = new Response<>(
+                false,
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage(),
+                null
+        );
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+    
+    
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Response<Void>> handleGeneric(Exception ex) {

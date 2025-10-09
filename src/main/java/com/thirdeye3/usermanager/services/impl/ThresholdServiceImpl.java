@@ -42,7 +42,7 @@ public class ThresholdServiceImpl implements ThresholdService {
     private Mapper mapper;
 
     @Override
-    public ThresholdDto createThreshold(Long thresoldGroupId, ThresholdDto thresholdDto) {
+    public ThresholdDto createThreshold(Long thresoldGroupId, ThresholdDto thresholdDto, Long requesterId) {
         logger.info("Creating threshold for groupId={}", thresoldGroupId);
         Threshold entity = mapper.toEntity(thresholdDto);
         if(thresholdRepository.countByThresholdGroupId(thresoldGroupId) == propertyService.getMaximumNoOfThresoldPerGroup())
@@ -53,7 +53,7 @@ public class ThresholdServiceImpl implements ThresholdService {
         {
         	throw new ThresholdNotFoundException("Invalid time gap");
         }
-        ThresholdGroup thresholdGroup = thresholdGroupService.getThresholdGroupByThresoldGroupId(thresoldGroupId);
+        ThresholdGroup thresholdGroup = thresholdGroupService.getThresholdGroupByThresoldGroupId(thresoldGroupId, requesterId);
         entity.setThresholdGroup(thresholdGroup);
         Threshold saved = thresholdRepository.save(entity);
         thresholdGroupService.sendThresholdToOtherMicroservices(1, thresoldGroupId, null);
@@ -61,28 +61,31 @@ public class ThresholdServiceImpl implements ThresholdService {
     }
 
     @Override
-    public ThresholdDto getThresholdById(Long id) {
+    public ThresholdDto getThresholdById(Long id, Long requesterId) {
     	logger.info("Fetching Threshold id={}", id);
         Threshold threshold = thresholdRepository.findById(id)
                 .orElseThrow(() -> new ThresholdNotFoundException("Threshold not found with id: " + id));
+        ThresholdGroup thresholdGroup = thresholdGroupService.getThresholdGroupByThresoldGroupId(threshold.getThresholdGroup().getId(), requesterId);
         return mapper.toDto(threshold);
     }
 
 
 
     @Override
-    public void deleteThresholdById(Long id) {
+    public void deleteThresholdById(Long id, Long requesterId) {
         logger.info("Deleting threshold with id={}", id);
         Threshold threshold = thresholdRepository.findById(id)
                 .orElseThrow(() -> new ThresholdNotFoundException("Threshold not found with id :" + id));
+        ThresholdGroup thresholdGroup = thresholdGroupService.getThresholdGroupByThresoldGroupId(threshold.getThresholdGroup().getId(), requesterId);
         thresholdRepository.delete(threshold);
         thresholdGroupService.sendThresholdToOtherMicroservices(1, threshold.getThresholdGroup().getId(), null);
 
     }
 
     @Override
-    public List<ThresholdDto> getThresholdsByGroupId(Long groupId) {
+    public List<ThresholdDto> getThresholdsByGroupId(Long groupId, Long requesterId) {
         logger.info("Fetching thresholds for groupId={}", groupId);
+        ThresholdGroup thresholdGroup = thresholdGroupService.getThresholdGroupByThresoldGroupId(groupId, requesterId);
         return mapper.toThresholdDtoList(thresholdRepository.findByThresholdGroupId(groupId));
     }
    

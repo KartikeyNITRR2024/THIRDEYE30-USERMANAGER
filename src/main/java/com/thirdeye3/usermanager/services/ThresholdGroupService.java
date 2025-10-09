@@ -9,17 +9,19 @@ import java.util.Set;
 
 public interface ThresholdGroupService {
 
-	ThresholdGroupDto addThresholdGroup(Long userId, ThresholdGroupDto thresholdGroupDto);
+	ThresholdGroupDto addThresholdGroup(Long userId, ThresholdGroupDto thresholdGroupDto, Long requesterId);
 
-    ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto);
+    ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto, Long requesterId);
 
-    void removeThresholdGroup(Long id);
+    void removeThresholdGroup(Long id, Long requesterId);
 
-    ThresholdGroupDto getThresholdGroup(Long id);
+    ThresholdGroupDto getThresholdGroup(Long id, Long requesterId);
 
-    List<ThresholdGroupDto> getThresholdGroupsByUserId(Long userId);
+    List<ThresholdGroupDto> getThresholdGroupsByUserId(Long userId, Long requesterId);
 
 	ThresholdGroup getThresholdGroupByThresoldGroupId(Long thresholdGroupId);
+	
+	ThresholdGroup getThresholdGroupByThresoldGroupId(Long thresholdGroupId, Long requesterId);
 
 	Map<Long, ThresholdGroupDto> getAllActiveGroups(Integer type);
 

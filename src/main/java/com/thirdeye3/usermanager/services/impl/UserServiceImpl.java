@@ -4,6 +4,7 @@ import com.thirdeye3.usermanager.dtos.UserDto;
 import com.thirdeye3.usermanager.entities.Role;
 import com.thirdeye3.usermanager.entities.ThresholdGroup;
 import com.thirdeye3.usermanager.entities.User;
+import com.thirdeye3.usermanager.exceptions.ForbiddenException;
 import com.thirdeye3.usermanager.exceptions.RoleNotFoundException;
 import com.thirdeye3.usermanager.exceptions.UserNotFoundException;
 import com.thirdeye3.usermanager.repositories.RoleRepository;
@@ -71,11 +72,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public UserDto updateUser(Long userId, UserDto userDto) {
+    public UserDto updateUser(Long userId, UserDto userDto, Long requesterId) {
         logger.info("Updating User id={}", userId);
         
         User existing = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        
+        if(requesterId.longValue() != existing.getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
         
         User updatedEntity = mapper.toEntity(userDto);
         existing.setFirstName(updatedEntity.getFirstName());
