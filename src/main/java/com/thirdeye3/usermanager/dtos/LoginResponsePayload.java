@@ -17,7 +17,6 @@ public class LoginResponsePayload {
     private Long userId;
     private String userName;
     private String firstName;
-    private String lastName;
     private List<String> roles;
     private Boolean firstLogin;
 }

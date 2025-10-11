@@ -27,5 +27,16 @@ public class UserController {
         UserDto updatedUser = userService.updateUser(userId, userDto, requesterId);
         return new Response<>(true, 0, null, updatedUser);
     }
+    
+    @GetMapping("/{userId}")
+    public Response<UserDto> getUser(
+            @PathVariable("userId") Long userId,
+            @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
+        logger.info("Updating user with ID: {}", userId);
+        UserDto user = userService.getUserDtoByUserId(userId, requesterId);
+        return new Response<>(true, 0, null, user);
+    }
+    
+    
 }
 
