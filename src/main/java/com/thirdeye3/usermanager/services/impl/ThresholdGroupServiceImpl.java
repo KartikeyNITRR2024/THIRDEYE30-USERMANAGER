@@ -107,6 +107,11 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         }
         ThresholdGroup entity = mapper.toEntity(thresholdGroupDto);
         entity.setUser(user);
+        if ((entity.getAllStocks() == true && entity.getStockList() != null && !entity.getStockList().isEmpty()) ||
+        	    (entity.getAllStocks() == false && (entity.getStockList() == null || entity.getStockList().isEmpty()))) {
+
+        	    throw new ThresholdGroupNotFoundException("Invalid stock list");
+        }
         if(!entity.getAllStocks())
         {
         	entity.setStockList(StockListSorter.shorter(entity.getStockList()));
@@ -130,11 +135,21 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         	throw new ForbiddenException("Forbidden");
         }
         
-        if(existing.getAllStocks() == true && (existing.getStockList() != null || existing.getStockList().length()>0))
-        {
-        	throw new ThresholdGroupNotFoundException(
-                    "Invalid stock list");
+        if ((existing.getAllStocks() == true && existing.getStockList() != null && !existing.getStockList().isEmpty()) ||
+        	    (existing.getAllStocks() == false && (existing.getStockList() == null || existing.getStockList().isEmpty()))) {
+
+        	    throw new ThresholdGroupNotFoundException("Invalid stock list");
         }
+        
+        if(!existing.getAllStocks())
+        {
+        	existing.setStockList(StockListSorter.shorter(existing.getStockList()));
+        }
+        else
+        {
+        	existing.setStockList("");
+        }
+        
         existing.setGroupName(thresholdGroupDto.getGroupName());
         existing.setActive(thresholdGroupDto.getActive());
         existing.setAllStocks(thresholdGroupDto.getAllStocks());
