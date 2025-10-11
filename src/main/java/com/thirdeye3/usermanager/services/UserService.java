@@ -13,7 +13,7 @@ public interface UserService {
     void activateUser(Long userId);
     void deactivateUser(Long userId);
 	List<Long> getActiveUserIds();
-	UserDto getUserDtoByUserId(Long userId);
+	UserDto getUserDtoByUserId(Long userId, Long requesterId);
 	void addRoleToUser(Long userId, String roleName);
 	void removeRoleFromUser(Long userId, String roleName);
 }

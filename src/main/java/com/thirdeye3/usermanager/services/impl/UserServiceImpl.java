@@ -43,10 +43,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final Mapper mapper = new Mapper();
 
     @Override
-    public UserDto getUserDtoByUserId(Long userId) {
+    public UserDto getUserDtoByUserId(Long userId, Long requesterId) {
         logger.info("Fetching UserDto by userId={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        if(requesterId.longValue() != user.getUserId().longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
         return mapper.toDto(user);
     }
 
