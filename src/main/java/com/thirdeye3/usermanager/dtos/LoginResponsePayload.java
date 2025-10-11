@@ -14,6 +14,7 @@ import java.util.Set;
 @ToString
 public class LoginResponsePayload {
     private String token;
+    private Long userId;
     private String userName;
     private String firstName;
     private String lastName;

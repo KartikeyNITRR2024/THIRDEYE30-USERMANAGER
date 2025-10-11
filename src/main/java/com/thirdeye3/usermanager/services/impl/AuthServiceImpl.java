@@ -114,6 +114,6 @@ public class AuthServiceImpl implements AuthService {
                 .toList();
         String token = tokenStarter+jwtUtil.generateToken(user.getUserName(), user.getUserId(), roles);
         logger.debug("Generated JWT token for user {} with roles {} for userId {}", user.getUserName(), roles, user.getUserId());
-        return new LoginResponsePayload(token, user.getUserName(), user.getFirstName(), user.getLastName(), roles, user.getFirstLogin());
+        return new LoginResponsePayload(token, user.getUserId(), user.getUserName(), user.getFirstName(), user.getLastName(), roles, user.getFirstLogin());
     }
 }
