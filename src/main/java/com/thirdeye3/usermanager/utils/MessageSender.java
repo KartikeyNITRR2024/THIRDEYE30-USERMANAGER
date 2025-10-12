@@ -69,7 +69,7 @@ public class MessageSender {
 
     public void sendGroupActivationStatus(String userName, String groupName, boolean isActive, List<TelegramChatId> telegramChatIds) {
         String firstNameCamel = toCamelCase(userName);
-        String status = isActive ? "activated" : "deactivated";
+        String status = isActive ? "activated" : "deactivated/deleted";
 
         StringBuilder message = new StringBuilder()
                 .append("<b>THIRDEYE Notification Service</b>\n")
