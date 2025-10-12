@@ -49,8 +49,14 @@ public class TelegramChatIdServiceImpl implements TelegramChatIdService {
         TelegramChatId telegramChatId = telegramChatIdRepository.findById(id)
                 .orElseThrow(() -> new TelegramChatIdNotFoundException("Telegram Chat ID not found with id: " + id));
         ThresholdGroup group = thresholdGroupService.getThresholdGroupByThresoldGroupId(telegramChatId.getThresholdGroup().getId(), requesterId);
-        telegramChatIdRepository.delete(telegramChatId);
-        thresholdGroupService.sendThresholdToOtherMicroservices(2, telegramChatId.getThresholdGroup().getId(), "updated");
+        telegramChatIdRepository.deleteById(id);
+        telegramChatIdRepository.flush();
+        try {
+        	thresholdGroupService.sendThresholdToOtherMicroservices(2, telegramChatId.getThresholdGroup().getId(), "deleted");
+        } catch (Exception e) {
+            logger.error("Async call failed", e.getMessage());
+        }
+        
     }
 
     @Override
