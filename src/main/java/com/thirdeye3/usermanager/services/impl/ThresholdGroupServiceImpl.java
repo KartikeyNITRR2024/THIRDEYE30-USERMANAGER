@@ -112,14 +112,7 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
 
         	    throw new ThresholdGroupNotFoundException("Invalid stock list");
         }
-        if(!entity.getAllStocks() && entity.getStockList().length()>0)
-        {
-        	entity.setStockList(StockListSorter.shorter(entity.getStockList()));
-        }
-        else
-        {
-        	entity.setStockList("");
-        }
+        
         ThresholdGroup saved = thresholdGroupRepository.save(entity);
         logger.info("Added ThresholdGroup id={} for userId={}", saved.getId(), user.getUserId());
         return mapper.toDto(saved);
@@ -127,34 +120,24 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
 
     @Override
     public ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
+    	System.out.println("0" + thresholdGroupDto); 
         logger.info("Updating ThresholdGroup id={}", id);
         ThresholdGroup existing = thresholdGroupRepository.findById(id)
                 .orElseThrow(() -> new ThresholdGroupNotFoundException("Threshold Group not found with id: " + id));
         if(requesterId.longValue() != existing.getUser().getUserId().longValue()) 
         {
         	throw new ForbiddenException("Forbidden");
-        }
-        
-        if ((existing.getAllStocks() == true && existing.getStockList() != null && !existing.getStockList().isEmpty()) ||
-        	    (existing.getAllStocks() == false && (existing.getStockList() == null))) {
+        }     
+        if ((thresholdGroupDto.getAllStocks() == true && thresholdGroupDto.getStockList() != null && !thresholdGroupDto.getStockList().isEmpty()) ||
+        	    (thresholdGroupDto.getAllStocks() == false && (thresholdGroupDto.getStockList() == null))) {
 
         	    throw new ThresholdGroupNotFoundException("Invalid stock list");
         }
-        
-        if(!existing.getAllStocks() && existing.getStockList().length()>0)
-        {
-        	existing.setStockList(StockListSorter.shorter(existing.getStockList()));
-        }
-        else
-        {
-        	existing.setStockList("");
-        }
-        
         existing.setGroupName(thresholdGroupDto.getGroupName());
         existing.setActive(thresholdGroupDto.getActive());
         existing.setAllStocks(thresholdGroupDto.getAllStocks());
-        existing.setStockList(StockListSorter.shorter(existing.getStockList()));
-        ThresholdGroup updated = thresholdGroupRepository.save(existing);
+        existing.setStockList(StockListSorter.shorter(thresholdGroupDto.getStockList()));
+        ThresholdGroup updated = thresholdGroupRepository.save(existing);   
         logger.info("Updated ThresholdGroup id={}", updated.getId());
         return mapper.toDto(updated);
     }
