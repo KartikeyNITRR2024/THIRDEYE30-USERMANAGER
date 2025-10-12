@@ -178,12 +178,13 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         {
         	throw new ForbiddenException("Forbidden");
         }
-        thresholdGroupRepository.deleteById(id);
         try {
         	sendThresholdToOtherMicroservices(3, id, null);
         } catch (Exception e) {
             logger.error("Async call failed", e.getMessage());
         }
+        thresholdGroupRepository.deleteById(id);
+        thresholdGroupRepository.flush();;
         logger.info("Removed ThresholdGroup id={}", id);
     }
 
