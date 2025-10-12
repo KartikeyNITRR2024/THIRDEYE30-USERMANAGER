@@ -19,7 +19,6 @@ public class MessageSender {
     @Autowired
     private MessageBrokerService messageBrokerService;
 
-    @Async
     public void sendTelegramMessage(String userName, String groupName, List<Threshold> thresholds, List<TelegramChatId> telegramChatIds) {
         String firstNameCamel = toCamelCase(userName);
         StringBuilder message = new StringBuilder()
@@ -53,7 +52,6 @@ public class MessageSender {
         sendMessageToTelegram(message.toString(), WorkType.THRESOLD, telegramChatIds);
     }
 
-    @Async
     public void sendTelegramMessage(String userName, String action, String groupName, List<TelegramChatId> telegramChatIds) {
         String firstNameCamel = toCamelCase(userName);
         StringBuilder message = new StringBuilder()
@@ -69,7 +67,6 @@ public class MessageSender {
         sendMessageToTelegram(message.toString(), WorkType.THRESOLD, telegramChatIds);
     }
 
-    @Async
     public void sendGroupActivationStatus(String userName, String groupName, boolean isActive, List<TelegramChatId> telegramChatIds) {
         String firstNameCamel = toCamelCase(userName);
         String status = isActive ? "activated" : "deactivated";
@@ -86,7 +83,6 @@ public class MessageSender {
         sendMessageToTelegram(message.toString(), WorkType.THRESOLD, telegramChatIds);
     }
 
-    @Async
     public void sendGroupStockListUpdate(String userName, String groupName, List<TelegramChatId> telegramChatIds) {
         String firstNameCamel = toCamelCase(userName);
 
