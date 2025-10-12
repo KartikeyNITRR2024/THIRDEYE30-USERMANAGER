@@ -78,8 +78,12 @@ public class ThresholdServiceImpl implements ThresholdService {
                 .orElseThrow(() -> new ThresholdNotFoundException("Threshold not found with id :" + id));
         ThresholdGroup thresholdGroup = thresholdGroupService.getThresholdGroupByThresoldGroupId(threshold.getThresholdGroup().getId(), requesterId);
         thresholdRepository.delete(threshold);
-        thresholdGroupService.sendThresholdToOtherMicroservices(1, threshold.getThresholdGroup().getId(), null);
-
+        thresholdRepository.flush();
+        try {
+        	thresholdGroupService.sendThresholdToOtherMicroservices(1, threshold.getThresholdGroup().getId(), null);
+        } catch (Exception e) {
+            logger.error("Async call failed", e.getMessage());
+        }
     }
 
     @Override

@@ -210,11 +210,10 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         ThresholdGroup thresholdGroup = thresholdGroupRepository.findById(groupId)
                 .orElseThrow(() -> new ThresholdGroupNotFoundException("Threshold Group not found with id: " + groupId));
         ThresholdGroupDto thresholdGroupDto = mapper.toDto(thresholdGroup);
+        List<TelegramChatId> telegramChatIds = thresholdGroup.getTelegramChatIds();
         if (type == 1) {
         	logger.info("Thresold group data for viewer");
             List<Threshold> thresholds = thresholdGroup.getThresholds();
-            thresholds.size();
-            List<TelegramChatId> telegramChatIds = thresholdGroup.getTelegramChatIds();
             thresholdGroupDto.setThresholds(mapper.toThresholdDtoList(thresholds));
             messageSender.sendTelegramMessage(
                 thresholdGroup.getUser().getFirstName(),
@@ -222,13 +221,39 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
                 thresholds,
                 telegramChatIds
             );
-
             stockViewerService.updateThresholdGroup(thresholdGroupDto);
         } else if (type == 2) {
         	logger.info("Thresold group data for messenger");
         	thresholdGroupDto.setTelegramChatIds(mapper.toTelegramChatIdDtoList(thresholdGroup.getTelegramChatIds()));
-        	messageSender.sendTelegramMessage(thresholdGroup.getUser().getFirstName(), action, thresholdGroup.getGroupName(), thresholdGroup.getTelegramChatIds());
+        	messageSender.sendTelegramMessage(thresholdGroup.getUser().getFirstName(), 
+        		action, 
+        		thresholdGroup.getGroupName(), 
+        		telegramChatIds
+        	);
         	messengerService.updateMessenger(thresholdGroupDto);
+        } else if (type == 3 || type == 4) {
+        	logger.info("Thresold group activation/deativation data for viewer");
+            List<Threshold> thresholds = thresholdGroup.getThresholds();
+            if(type == 4)
+            {
+            	thresholdGroupDto.setThresholds(mapper.toThresholdDtoList(thresholds));
+            }
+            messageSender.sendGroupActivationStatus(
+            	thresholdGroup.getUser().getFirstName(), 
+            	thresholdGroup.getGroupName(), 
+            	type == 4, telegramChatIds
+            );
+            stockViewerService.updateThresholdGroup(thresholdGroupDto);
+        } else if (type == 5) {
+        	logger.info("Thresold update stock list");
+            List<Threshold> thresholds = thresholdGroup.getThresholds();
+            thresholdGroupDto.setThresholds(mapper.toThresholdDtoList(thresholds));
+            messageSender.sendGroupStockListUpdate(
+                thresholdGroup.getUser().getFirstName(),
+                thresholdGroup.getGroupName(),
+                telegramChatIds
+            );
+            stockViewerService.updateThresholdGroup(thresholdGroupDto);
         }
     	
     }
