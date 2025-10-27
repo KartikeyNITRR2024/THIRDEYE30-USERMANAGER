@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.thirdeye3.usermanager.services.BackupService;
 import com.thirdeye3.usermanager.services.PropertyService;
 
 //import com.thirdeye3.usermanager.services.PropertyService;
@@ -20,7 +21,10 @@ public class Initiatier {
     private static final Logger logger = LoggerFactory.getLogger(Initiatier.class);
 	
 	@Autowired
-	PropertyService propertyService;
+	private PropertyService propertyService;
+	
+	@Autowired
+	private BackupService backupService;
 
     @Value("${thirdeye.priority}")
     private Integer priority;
@@ -44,6 +48,7 @@ public class Initiatier {
 	public void refreshMemory()
 	{
 		logger.info("Going to refersh memory...");
+		backupService.exportAllToZip();
 		logger.info("Memory refreshed.");
 	}
 
