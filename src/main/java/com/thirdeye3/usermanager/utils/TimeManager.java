@@ -1,6 +1,7 @@
 package com.thirdeye3.usermanager.utils;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,6 +23,11 @@ public class TimeManager {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of(timeZone));
         LocalDateTime localDateTime = currentTime.toLocalDateTime();
         return Timestamp.valueOf(localDateTime);
+    }
+    
+    public String getCurrentTimeString() {
+    	Timestamp currentTimestamp = getCurrentTime();
+        return new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(currentTimestamp);
     }
 }
 

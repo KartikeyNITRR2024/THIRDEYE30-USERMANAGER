@@ -4,6 +4,7 @@ import com.thirdeye3.usermanager.dtos.UserDto;
 import com.thirdeye3.usermanager.entities.Role;
 import com.thirdeye3.usermanager.entities.ThresholdGroup;
 import com.thirdeye3.usermanager.entities.User;
+import com.thirdeye3.usermanager.exceptions.CSVException;
 import com.thirdeye3.usermanager.exceptions.ForbiddenException;
 import com.thirdeye3.usermanager.exceptions.RoleNotFoundException;
 import com.thirdeye3.usermanager.exceptions.UserNotFoundException;
@@ -12,6 +13,8 @@ import com.thirdeye3.usermanager.repositories.UserRepository;
 import com.thirdeye3.usermanager.services.UserService;
 import com.thirdeye3.usermanager.utils.Mapper;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -194,5 +201,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	    userRepository.save(user);
 	    logger.info("Role={} removed from userId={}", roleName, userId);
 	}
+	
+	
+
+
+
+
+
+
 
 }

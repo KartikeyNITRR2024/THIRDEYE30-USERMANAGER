@@ -3,8 +3,8 @@ package com.thirdeye3.usermanager.services;
 import com.thirdeye3.usermanager.dtos.UserDto;
 import com.thirdeye3.usermanager.entities.User;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 	User getUserByUserId(Long userId);

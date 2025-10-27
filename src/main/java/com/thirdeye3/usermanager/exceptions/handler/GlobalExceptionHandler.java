@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.thirdeye3.usermanager.dtos.Response;
+import com.thirdeye3.usermanager.exceptions.CSVException;
+import com.thirdeye3.usermanager.exceptions.EmailException;
 import com.thirdeye3.usermanager.exceptions.ForbiddenException;
 import com.thirdeye3.usermanager.exceptions.MessageBrokerException;
 import com.thirdeye3.usermanager.exceptions.PropertyFetchException;
@@ -131,6 +133,28 @@ public class GlobalExceptionHandler {
                 null
         );
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+    
+    @ExceptionHandler(CSVException.class)
+    public ResponseEntity<Response<Void>> handleForCsvException(CSVException ex) {
+        Response<Void> response = new Response<>(
+                false,
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                null
+        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<Response<Void>> handleForCsvException(EmailException ex) {
+        Response<Void> response = new Response<>(
+                false,
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                null
+        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     
