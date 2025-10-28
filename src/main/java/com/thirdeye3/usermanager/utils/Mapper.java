@@ -154,6 +154,24 @@ public class Mapper {
         return dto;
     }
     
+    public List<UserDto> toUserDtoList(List<User> entities) {
+        if (entities == null) {
+            return null;
+        }
+        return entities.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> toUserEntityList(List<UserDto> dtos) {
+        if (dtos == null) {
+            return null;
+        }
+        return dtos.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
+    }
+    
     public List<ThresholdGroupDto> toThresholdGroupDtoList(List<ThresholdGroup> entities) {
         if (entities == null) {
             return null;

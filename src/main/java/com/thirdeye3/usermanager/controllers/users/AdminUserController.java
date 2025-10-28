@@ -3,6 +3,9 @@ package com.thirdeye3.usermanager.controllers.users;
 import com.thirdeye3.usermanager.dtos.Response;
 import com.thirdeye3.usermanager.dtos.UserDto;
 import com.thirdeye3.usermanager.services.UserService;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,12 @@ public class AdminUserController {
 
     @Autowired
     private UserService userService;
+    
+    @GetMapping()
+    public Response<List<UserDto>> getUsers() {
+        logger.info("Get all users");
+        return new Response<>(true, 0, null, userService.getAllUsers());
+    }
 
     @DeleteMapping("/{userId}")
     public Response<Void> deleteUser(@PathVariable("userId") Long userId) {
