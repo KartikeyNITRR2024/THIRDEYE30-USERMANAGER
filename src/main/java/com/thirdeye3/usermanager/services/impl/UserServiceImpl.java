@@ -117,6 +117,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         logger.info("Deleting user with id={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        if(user.getUserName().equals(userName))
+	    {
+	    	throw new UserNotFoundException("Cannot delete user: "+userName);
+	    }
         userRepository.delete(user);
         logger.info("User deleted with id={}", user.getUserId());
     }
@@ -126,6 +130,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         logger.info("Activating user with id={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        if(user.getUserName().equals(userName))
+	    {
+	    	throw new UserNotFoundException("Cannot change status of user: "+userName);
+	    }
         user.setActive(true);
         userRepository.save(user);
         logger.info("User activated with id={}", userId);
@@ -136,6 +144,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         logger.info("Deactivating user with id={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        if(user.getUserName().equals(userName))
+	    {
+	    	throw new UserNotFoundException("Cannot change status of user: "+userName);
+	    }
         user.setActive(false);
         userRepository.save(user);
         logger.info("User deactivated with id={}", userId);

@@ -28,24 +28,24 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{userId}")
-    public Response<Void> deleteUser(@PathVariable("userId") Long userId) {
+    public Response<String> deleteUser(@PathVariable("userId") Long userId) {
         logger.info("Deleting user with ID: {}", userId);
         userService.deleteUser(userId);
-        return new Response<>(true, 0, null, null);
+        return new Response<>(true, 0, null, "User deleted successfully");
     }
 
     @PatchMapping("/{userId}/activate")
-    public Response<Void> activateUser(@PathVariable("userId") Long userId) {
+    public Response<String> activateUser(@PathVariable("userId") Long userId) {
         logger.info("Activating user with ID: {}", userId);
         userService.activateUser(userId);
-        return new Response<>(true, 0, null, null);
+        return new Response<>(true, 0, null, "User status is activated");
     }
 
     @PatchMapping("/{userId}/deactivate")
-    public Response<Void> deactivateUser(@PathVariable("userId") Long userId) {
+    public Response<String> deactivateUser(@PathVariable("userId") Long userId) {
         logger.info("Deactivating user with ID: {}", userId);
         userService.deactivateUser(userId);
-        return new Response<>(true, 0, null, null);
+        return new Response<>(true, 0, null, "User status is deactivated");
     }
     
     @PatchMapping("/{userId}/roles/{roleName}/add")
