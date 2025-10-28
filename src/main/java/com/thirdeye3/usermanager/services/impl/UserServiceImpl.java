@@ -60,6 +60,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return mapper.toDto(user);
     }
+    
+    @Override
+    public List<UserDto> getAllUsers() {
+    	logger.info("Fetching all UserDto");
+    	List<User> users = userRepository.findAll();
+    	return mapper.toUserDtoList(users);
+    }
 
     @Override
     public User getUserByUserId(Long userId) {
