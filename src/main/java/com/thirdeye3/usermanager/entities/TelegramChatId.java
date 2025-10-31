@@ -24,7 +24,7 @@ public class TelegramChatId {
     @Column(name = "WORK_TYPE", nullable = false)
     private WorkType workType;
 
-    @Column(name = "CHAT_ID", nullable = false, unique = true)
+    @Column(name = "CHAT_ID", nullable = false)
     private String chatId;
     
     @Column(name = "CHAT_NAME", nullable = false)
