@@ -106,6 +106,7 @@ public class MessageSender {
                 .map(c -> {
                     TelegramMessage telegramMessage = new TelegramMessage();
                     telegramMessage.setChatId(c.getChatId());
+                    telegramMessage.setChatName(c.getChatName());
                     telegramMessage.setChats(List.of(message));
                     return telegramMessage;
                 })

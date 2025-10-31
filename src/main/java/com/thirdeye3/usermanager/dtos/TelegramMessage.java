@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class TelegramMessage {
 	private String chatId;
+	private String chatName;
 	private List<String> chats = new ArrayList<>();
 }
 
