@@ -100,8 +100,13 @@ public class AuthServiceImpl implements AuthService {
 
         Mail mail = mailService.updateOrCreateMail(1, newUser);
         logger.info("OTP generated and stored for userId: {}", newUser.getUserId());
+        
+        String maskedUserName = user.getUserName();
+        if (user.getUserName().length() > 5) {
+        	maskedUserName = user.getUserName().substring(0, 5) + "****************";
+        }
 
-        return new RegisterResponsePayload(mail.getId(), mail.getMailType(), "User created. Please verify OTP sent to email.");
+        return new RegisterResponsePayload(mail.getId(), mail.getMailType(), "User created. Verification OTP sent to email : " + maskedUserName);
     }
     
     @Override
@@ -128,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
                     mail.getId(),
                     2,
                     true,
-                    "OTP sent to email associated with username: " + maskedUserName
+                    "OTP sent to email : " + maskedUserName
             );
         }
         logger.warn("Reset password failed: No user found with provided username/phone.");
@@ -190,11 +195,20 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findByUserName(authUserPayload.getUserName())
                 .orElseThrow(() -> new UserNotFoundException("Invalid username or password"));
+        
+        
+        
 
         if (!user.getEmailVerified()) {
             logger.warn("Login blocked. Email not verified for username: {}", user.getUserName());
             Mail mail = mailService.updateOrCreateMail(1, user);
-            return new LoginResponsePayload(null, null, null, null, null, null, mail.getId(), 1, "Email not verified. OTP resent.", false, 2L);
+            
+            String maskedUserName = user.getUserName();
+            if (user.getUserName().length() > 5) {
+            	maskedUserName = user.getUserName().substring(0, 5) + "****************";
+            }
+            
+            return new LoginResponsePayload(null, null, null, null, null, null, mail.getId(), 1, "Email not verified. OTP sent to email associated with email: " + maskedUserName, false, 2L);
         }
 
         if (!user.getActive()) {
