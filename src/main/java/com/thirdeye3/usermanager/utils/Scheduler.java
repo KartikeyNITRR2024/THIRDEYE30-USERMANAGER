@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.thirdeye3.usermanager.dtos.Response;
 import com.thirdeye3.usermanager.externalcontollers.SelfClient;
+import com.thirdeye3.usermanager.services.MailService;
 @Component
 public class Scheduler {
 	
@@ -25,6 +26,9 @@ public class Scheduler {
     @Autowired
     Initiatier initiatier;
     
+    @Autowired
+    private MailService mailService;
+    
     @Value("${thirdeye.uniqueId}")
     private Integer uniqueId;
 
@@ -35,6 +39,12 @@ public class Scheduler {
     public void checkStatusTask() {
         Response<String> response = selfClient.statusChecker(uniqueId, uniqueCode);
         logger.info("Status check response is {}", response.getResponse());
+    }
+	
+	@Scheduled(fixedRate = 120000)
+	public void removeMails() {
+		mailService.deleteMails();
+        logger.info("Removed mails");
     }
 	
     @Scheduled(cron = "${thirdeye.scheduler.cronToRefreshData}", zone = "${thirdeye.timezone}")
