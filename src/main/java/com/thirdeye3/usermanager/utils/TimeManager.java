@@ -18,6 +18,11 @@ public class TimeManager {
     
     @Value("${thirdeye.timezone}")
     private String timeZone;
+    
+    public LocalDateTime getLocalCurrentTime() {
+    	ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of(timeZone));
+    	return currentTime.toLocalDateTime();
+    }
 
     public Timestamp getCurrentTime() {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of(timeZone));
@@ -29,6 +34,8 @@ public class TimeManager {
     	Timestamp currentTimestamp = getCurrentTime();
         return new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(currentTimestamp);
     }
+    
+    
 }
 
 

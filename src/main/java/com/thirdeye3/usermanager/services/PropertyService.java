@@ -17,4 +17,8 @@ public interface PropertyService {
     Long getMaximumNoOfGroupPerUser();
 
     Set<Long> getTimeGapListForThresoldInSeconds();
+
+	Long getOtpExpiryTimeInMinutes();
+
+	Long getMaximumNoOfTriesToSendOtp();
 }

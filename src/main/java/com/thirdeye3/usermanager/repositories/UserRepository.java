@@ -21,5 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     @Query(value = "SELECT user_user_id AS userId, roles_id AS roleId FROM users_roles", nativeQuery = true)
     List<Object[]> findAllUserRoleMappings();
+    
+    Optional<User> findByUserNameOrPhoneNumber(String userName, String phoneNumber);
 
 }
