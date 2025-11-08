@@ -42,4 +42,10 @@ public interface MailRepository extends CrudRepository<Mail, Long> {
     @Modifying
     @Query("UPDATE Mail m SET m.noOFTriesLeft = m.noOFTriesLeft - 1 WHERE m.id = :id")
     void decreaseTries(Long id);
+    
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Mail m WHERE m.success = true OR m.noOFTriesLeft <= 0 OR m.expiryTime < :currentTime")
+    void deleteExpiredOrFailed(LocalDateTime currentTime);
+
 }

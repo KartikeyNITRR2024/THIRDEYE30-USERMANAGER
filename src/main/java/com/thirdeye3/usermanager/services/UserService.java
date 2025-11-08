@@ -17,5 +17,6 @@ public interface UserService {
 	void addRoleToUser(Long userId, String roleName);
 	void removeRoleFromUser(Long userId, String roleName);
 	List<UserDto> getAllUsers();
+	void deleteAllUnverifiedUser();
 }
 

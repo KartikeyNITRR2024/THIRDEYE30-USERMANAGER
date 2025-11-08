@@ -247,6 +247,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	    logger.info("Role={} removed from userId={}", roleName, userId);
 	}
 	
+	@Override
+	public void deleteAllUnverifiedUser()
+	{
+		logger.info("🧹 Cleaning unverified user records...");
+		userRepository.deleteAllUnverifiedUsers();
+        logger.info("✅ Cleanup completed.");
+	}
+	
 	
 
 

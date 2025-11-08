@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.thirdeye3.usermanager.services.BackupService;
 import com.thirdeye3.usermanager.services.PropertyService;
+import com.thirdeye3.usermanager.services.UserService;
 
 //import com.thirdeye3.usermanager.services.PropertyService;
 
@@ -25,6 +26,9 @@ public class Initiatier {
 	
 	@Autowired
 	private BackupService backupService;
+	
+	@Autowired
+	private UserService userService;
 
     @Value("${thirdeye.priority}")
     private Integer priority;
@@ -48,6 +52,7 @@ public class Initiatier {
 	public void refreshMemory()
 	{
 		logger.info("Going to refersh memory...");
+		userService.deleteAllUnverifiedUser();
 		backupService.exportAllToZip();
 		logger.info("Memory refreshed.");
 	}

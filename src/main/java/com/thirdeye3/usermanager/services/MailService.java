@@ -9,4 +9,6 @@ public interface MailService {
 
 	Mail verifyOtp(Long mailId, Integer type, String otp);
 
+	void deleteMails();
+
 }
