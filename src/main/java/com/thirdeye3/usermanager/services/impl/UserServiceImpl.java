@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User existing = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
         
-        if (!Boolean.TRUE.equals(user.getEmailVerified()))
+        if (!Boolean.TRUE.equals(existing.getEmailVerified()))
         {
         	logger.warn("User with id={} is inactive", userId);
             throw new UserNotFoundException("User is unverified");
@@ -136,6 +136,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         logger.info("Deleting user with id={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        
+        if (!Boolean.TRUE.equals(user.getEmailVerified()))
+        {
+        	logger.warn("User with id={} is inactive", userId);
+            throw new UserNotFoundException("User is unverified");
+        }
+        
         if(user.getUserName().equals(userName))
 	    {
 	    	throw new UserNotFoundException("Cannot delete user: "+userName);
