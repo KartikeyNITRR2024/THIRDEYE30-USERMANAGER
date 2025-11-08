@@ -34,7 +34,7 @@ public class User {
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Column(name = "PHONE_NUMBER")
+    @Column(name = "PHONE_NUMBER", unique = true)
     private String phoneNumber;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -48,4 +48,7 @@ public class User {
     
     @Column(name = "FIRST_LOGIN", nullable = false)
     private Boolean firstLogin = true;
+    
+    @Column(name = "EMAIL_VERIFIED", nullable = false)
+    private Boolean emailVerified = false;
 }

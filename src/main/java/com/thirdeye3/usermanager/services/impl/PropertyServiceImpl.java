@@ -30,6 +30,8 @@ public class PropertyServiceImpl implements PropertyService {
     private Long maximumNoOfHoldedStockPerUser = null;
     private Long maximumNoOfGroupPerUser = null;
     private Set<Long> timeGapListForThresoldInSeconds = null;
+    private Long otpExpiryTimeInMinutes = null;
+    private Long maximumNoOfTriesToSendOtp = null;
 
     @Override
     public void fetchProperties() {
@@ -48,8 +50,10 @@ public class PropertyServiceImpl implements PropertyService {
                         .map(Long::parseLong)
                         .collect(Collectors.toSet());
             }
-            logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}",
-                    properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds);
+            otpExpiryTimeInMinutes = ((Number) properties.getOrDefault("OTP_EXPIRY_TIME_IN_MINUTES", 5L)).longValue();
+            maximumNoOfTriesToSendOtp = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_TRIES_TO_SEND_OTP", 5L)).longValue();
+            logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}, otpExpiryTimeInMinutes{}, maximumNoOfTriesToSendOtp {}",
+                    properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds, otpExpiryTimeInMinutes, maximumNoOfTriesToSendOtp);
         } else {
             properties = new HashMap<>();
             logger.error("Failed to fetch properties");
@@ -101,4 +105,24 @@ public class PropertyServiceImpl implements PropertyService {
     	}
         return timeGapListForThresoldInSeconds;
     }
+    
+    @Override
+    public Long getOtpExpiryTimeInMinutes() {
+    	if(otpExpiryTimeInMinutes == null)
+    	{
+    		fetchProperties();
+    	}
+        return otpExpiryTimeInMinutes;
+    }
+    
+    @Override
+    public Long getMaximumNoOfTriesToSendOtp() {
+    	if(maximumNoOfTriesToSendOtp == null)
+    	{
+    		fetchProperties();
+    	}
+        return maximumNoOfTriesToSendOtp;
+    }
+    
+    
 }

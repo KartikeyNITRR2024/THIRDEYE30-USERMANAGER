@@ -19,4 +19,9 @@ public class LoginResponsePayload {
     private String firstName;
     private List<String> roles;
     private Boolean firstLogin;
+    private Long mailId;
+    private Integer mailType;
+    private String message;
+    private Boolean loginSuccess;
+    private Long errorType;
 }

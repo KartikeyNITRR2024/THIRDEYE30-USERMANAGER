@@ -62,6 +62,7 @@ public class AdminUserConfig implements ApplicationRunner {
             admin.setPassword(passwordEncoder.encode(password));
             admin.setRoles(Set.of(adminRole, userRole));
             admin.setFirstLogin(true);
+            admin.setEmailVerified(false);
             userRepository.save(admin);
             log.info("Admin user '{}' created successfully with roles {}", username, admin.getRoles());
         } else {
