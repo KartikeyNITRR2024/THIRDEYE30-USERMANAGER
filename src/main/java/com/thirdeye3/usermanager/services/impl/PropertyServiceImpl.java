@@ -52,7 +52,7 @@ public class PropertyServiceImpl implements PropertyService {
             }
             otpExpiryTimeInMinutes = ((Number) properties.getOrDefault("OTP_EXPIRY_TIME_IN_MINUTES", 5L)).longValue();
             maximumNoOfTriesToSendOtp = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_TRIES_TO_SEND_OTP", 5L)).longValue();
-            logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}, otpExpiryTimeInMinutes{}, maximumNoOfTriesToSendOtp {}",
+            logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}, otpExpiryTimeInMinutes {}, maximumNoOfTriesToSendOtp {}",
                     properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds, otpExpiryTimeInMinutes, maximumNoOfTriesToSendOtp);
         } else {
             properties = new HashMap<>();
