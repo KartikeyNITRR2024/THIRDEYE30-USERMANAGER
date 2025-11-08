@@ -54,6 +54,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         logger.info("Fetching UserDto by userId={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        
+        if (!Boolean.TRUE.equals(user.getEmailVerified()))
+        {
+        	logger.warn("User with id={} is inactive", userId);
+            throw new UserNotFoundException("User is unverified");
+        }
+        
         if(requesterId.longValue() != user.getUserId().longValue()) 
         {
         	throw new ForbiddenException("Forbidden");
@@ -74,15 +81,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        
+        if (!Boolean.TRUE.equals(user.getEmailVerified()))
+        {
+        	logger.warn("User with id={} is inactive", userId);
+            throw new UserNotFoundException("User is unverified");
+        }
 
         if (!Boolean.TRUE.equals(user.getActive())) {
             logger.warn("User with id={} is inactive", userId);
-            throw new UserNotFoundException("User with id " + userId + " is inactive");
+            throw new UserNotFoundException("User is inactive");
         }
         
         if (Boolean.TRUE.equals(user.getFirstLogin())) {
             logger.warn("User with id={} is not updated Name and Mobile Number", userId);
-            throw new UserNotFoundException("User with id " + userId + " is not updated Name and Mobile Number");
+            throw new UserNotFoundException("User is not updated Name and Mobile Number");
         }
 
         return user;
@@ -95,6 +108,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         
         User existing = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        
+        if (!Boolean.TRUE.equals(user.getEmailVerified()))
+        {
+        	logger.warn("User with id={} is inactive", userId);
+            throw new UserNotFoundException("User is unverified");
+        }
         
         if(requesterId.longValue() != existing.getUserId().longValue()) 
         {
