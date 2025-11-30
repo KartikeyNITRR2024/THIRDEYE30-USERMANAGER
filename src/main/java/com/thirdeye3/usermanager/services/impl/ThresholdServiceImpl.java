@@ -92,9 +92,9 @@ public class ThresholdServiceImpl implements ThresholdService {
     
     
 
-
+    @CacheEvict(value = "thresholdsByGroupCache", key = "#result")
     @Override
-    public void deleteThresholdById(Long id, Long requesterId) {
+    public Long deleteThresholdById(Long id, Long requesterId) {
 
         logger.info("Deleting threshold with id={}", id);
 
@@ -107,26 +107,18 @@ public class ThresholdServiceImpl implements ThresholdService {
 
         thresholdRepository.delete(threshold);
         thresholdRepository.flush();
-        
-        deleteFromChache(id, groupId);
 
         try {
             thresholdGroupService.sendThresholdToOtherMicroservices(1, groupId, null);
         } catch (Exception e) {
-            logger.error("Async call failed", e.getMessage());
+            logger.error("Async call failed {}", e.getMessage());
         }
+
+        return groupId;
     }
+
     
-    @Caching(
-            evict = {
-                @CacheEvict(value = "thresholdCache", key = "#id"),
-                @CacheEvict(value = "thresholdsByGroupCache", key = "#groupId")
-            }
-    )
-    private void deleteFromChache(Long id, Long groupId)
-    {
-    	return;
-    }
+    
 
     @Cacheable(value = "thresholdsByGroupCache", key = "#groupId")
     @Override

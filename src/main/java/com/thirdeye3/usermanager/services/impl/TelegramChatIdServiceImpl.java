@@ -44,32 +44,27 @@ public class TelegramChatIdServiceImpl implements TelegramChatIdService {
     }
 
 
-    
-    @Override
-    public void deleteTelegramChatId(Long id, Long requesterId) {
-        logger.info("Deleting chat id with id={}", id);
+    public Long deleteTelegramChatId(Long id, Long requesterId) {
+
         TelegramChatId telegramChatId = telegramChatIdRepository.findById(id)
                 .orElseThrow(() -> new TelegramChatIdNotFoundException("Telegram Chat ID not found with id: " + id));
-        thresholdGroupService.getThresholdGroupByThresoldGroupId(telegramChatId.getThresholdGroup().getId(), requesterId);
+
+        Long groupId = telegramChatId.getThresholdGroup().getId();
+
+        thresholdGroupService.getThresholdGroupByThresoldGroupId(groupId, requesterId);
+
         telegramChatIdRepository.deleteById(id);
         telegramChatIdRepository.flush();
-        deleteFromChache(telegramChatId.getThresholdGroup().getId());
+
         try {
-            thresholdGroupService.sendThresholdToOtherMicroservices(2, telegramChatId.getThresholdGroup().getId(), "deleted");
+            thresholdGroupService.sendThresholdToOtherMicroservices(2, groupId, "deleted");
         } catch (Exception e) {
-            logger.error("Async call failed", e.getMessage());
+            logger.error("Async call failed {}", e.getMessage());
         }
+
+        return groupId;
     }
-    
-    @Caching(
-            evict = {
-                @CacheEvict(value = "telegramChatIdsByGroupCache", key = "#groupId")
-            }
-    )
-    public void deleteFromChache(Long groupId)
-    {
-    	
-    }
+
 
 
     @Cacheable(value = "telegramChatIdsByGroupCache", key = "#thresholdGroupId")

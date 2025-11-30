@@ -11,7 +11,7 @@ public interface TelegramChatIdService {
 
 	TelegramChatIdDto addTelegramChatId(Long thresholdGroupId, TelegramChatIdDto dto, Long requesterId);
 
-    void deleteTelegramChatId(Long id, Long requesterId);
+    Long deleteTelegramChatId(Long id, Long requesterId);
 
     List<TelegramChatIdDto> getTelegramChatIdsByThresholdGroupId(Long thresholdGroupId, Long requesterId);
 }

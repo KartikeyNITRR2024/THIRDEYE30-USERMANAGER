@@ -12,7 +12,7 @@ public interface ThresholdService {
 
     ThresholdDto getThresholdById(Long id, Long requesterId);
 
-    void deleteThresholdById(Long id, Long requesterId);
+    Long deleteThresholdById(Long id, Long requesterId);
 
     List<ThresholdDto> getThresholdsByGroupId(Long groupId, Long requesterId);
 
