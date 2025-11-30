@@ -127,62 +127,58 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
     }
 
     @CachePut(value = "thresholdGroupCache", key = "#id")
-    @CacheEvict(value = "thresholdGroupsCache", key = "#existing.user.userId")
+    @CacheEvict(value = "thresholdGroupsCache", key = "#requesterId")
     @Override
     public ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
         logger.info("Updating ThresholdGroup id={}", id);
+
         int type1 = -1;
         int type2 = -1;
+
         ThresholdGroup existing = thresholdGroupRepository.findById(id)
                 .orElseThrow(() -> new ThresholdGroupNotFoundException("Threshold Group not found with id: " + id));
-        if(requesterId.longValue() != existing.getUser().getUserId().longValue()) 
-        {
-        	throw new ForbiddenException("Forbidden");
-        }     
-        if ((thresholdGroupDto.getAllStocks() == true && thresholdGroupDto.getStockList() != null && !thresholdGroupDto.getStockList().isEmpty()) ||
-        	    (thresholdGroupDto.getAllStocks() == false && (thresholdGroupDto.getStockList() == null))) {
 
-        	    throw new ThresholdGroupNotFoundException("Invalid stock list");
+        if (requesterId.longValue() != existing.getUser().getUserId().longValue()) {
+            throw new ForbiddenException("Forbidden");
         }
-        if(thresholdGroupDto.getActive() != existing.getActive())
-        {
-        	if(!thresholdGroupDto.getActive())
-        	{
-        		type1 = 3;
-        	}
-        	else
-        	{
-        		type1 = 4;
-        	}
+
+        if ((thresholdGroupDto.getAllStocks() == true && thresholdGroupDto.getStockList() != null && !thresholdGroupDto.getStockList().isEmpty()) ||
+                (thresholdGroupDto.getAllStocks() == false && (thresholdGroupDto.getStockList() == null))) {
+            throw new ThresholdGroupNotFoundException("Invalid stock list");
         }
-        if(thresholdGroupDto.getAllStocks() != existing.getAllStocks() || !thresholdGroupDto.getStockList().equals(existing.getStockList()))
-        {
-        	type2 = 5;
+
+        if (!thresholdGroupDto.getActive().equals(existing.getActive())) {
+            type1 = thresholdGroupDto.getActive() ? 4 : 3;
         }
+
+        if (!thresholdGroupDto.getAllStocks().equals(existing.getAllStocks()) ||
+                !thresholdGroupDto.getStockList().equals(existing.getStockList())) {
+            type2 = 5;
+        }
+
         existing.setGroupName(thresholdGroupDto.getGroupName());
         existing.setActive(thresholdGroupDto.getActive());
         existing.setAllStocks(thresholdGroupDto.getAllStocks());
         existing.setStockList(StockListSorter.shorter(thresholdGroupDto.getStockList()));
-        ThresholdGroup updated = thresholdGroupRepository.save(existing);  
+
+        ThresholdGroup updated = thresholdGroupRepository.save(existing);
         thresholdGroupRepository.flush();
-        try {
-        	sendThresholdToOtherMicroservices(type1, id, null);
-        } catch (Exception e) {
-            logger.error("Async call failed", e.getMessage());
-        }
-        try {
-        	sendThresholdToOtherMicroservices(type2, id, null);
-        } catch (Exception e) {
-            logger.error("Async call failed", e.getMessage());
-        }
+
+        try { sendThresholdToOtherMicroservices(type1, id, null); }
+        catch (Exception e) { logger.error("Async call failed", e.getMessage()); }
+
+        try { sendThresholdToOtherMicroservices(type2, id, null); }
+        catch (Exception e) { logger.error("Async call failed", e.getMessage()); }
+
         logger.info("Updated ThresholdGroup id={}", updated.getId());
         return mapper.toDto(updated);
     }
 
+
     @Caching(
     	    evict = {
     	        @CacheEvict(value = "thresholdGroupCache", key = "#id"),
-    	        @CacheEvict(value = "thresholdGroupsCache", key = "#existing.user.userId")
+    	        @CacheEvict(value = "thresholdGroupsCache", key = "#requesterId")
     	    }
     )
     @Override
