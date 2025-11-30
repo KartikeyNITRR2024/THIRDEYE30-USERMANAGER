@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-    @Cacheable(value = "userCache", key = "#userId")
     @Override
     public User getUserByUserId(Long userId) {
         logger.info("Fetching User entity by userId={}", userId);
