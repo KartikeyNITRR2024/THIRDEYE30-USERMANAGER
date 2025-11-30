@@ -20,6 +20,11 @@ import com.thirdeye3.usermanager.utils.StockListSorter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,6 +74,7 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         return group;
     }
     
+    
     @Override
     public ThresholdGroup getThresholdGroupByThresoldGroupId(Long thresholdGroupId, Long requesterId) {
         logger.info("Fetching ThresholdGroup by id={}", thresholdGroupId);
@@ -92,6 +98,8 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
     }
 
 
+    @CachePut(value = "thresholdGroupCache", key = "#result.id")
+    @CacheEvict(value = "thresholdGroupsCache", key = "#userId")
     @Override
     public ThresholdGroupDto addThresholdGroup(Long userId, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
         logger.info("Adding ThresholdGroup for userId={}", userId);
@@ -118,6 +126,8 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         return mapper.toDto(saved);
     }
 
+    @CachePut(value = "thresholdGroupCache", key = "#id")
+    @CacheEvict(value = "thresholdGroupsCache", key = "#existing.user.userId")
     @Override
     public ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
         logger.info("Updating ThresholdGroup id={}", id);
@@ -169,6 +179,12 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         return mapper.toDto(updated);
     }
 
+    @Caching(
+    	    evict = {
+    	        @CacheEvict(value = "thresholdGroupCache", key = "#id"),
+    	        @CacheEvict(value = "thresholdGroupsCache", key = "#existing.user.userId")
+    	    }
+    )
     @Override
     public void removeThresholdGroup(Long id, Long requesterId) {
         logger.info("Removing ThresholdGroup id={}", id);
@@ -188,6 +204,7 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         logger.info("Removed ThresholdGroup id={}", id);
     }
 
+    @Cacheable(value = "thresholdGroupCache", key = "#id")
     @Override
     public ThresholdGroupDto getThresholdGroup(Long id, Long requesterId) {
         logger.info("Fetching ThresholdGroup id={}", id);
@@ -200,6 +217,7 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         return mapper.toDto(existing);
     }
 
+    @Cacheable(value = "thresholdGroupsCache", key = "#userId")
     @Override
     public List<ThresholdGroupDto> getThresholdGroupsByUserId(Long userId, Long requesterId) {
         logger.info("Fetching ThresholdGroups for userId={}", userId);
