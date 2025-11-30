@@ -1,5 +1,7 @@
 package com.thirdeye3.usermanager.dtos;
 
+import java.io.Serializable;
+
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ThresholdDto {
+public class ThresholdDto implements Serializable {
 
     private Long id;
 
