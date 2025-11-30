@@ -1,5 +1,7 @@
 package com.thirdeye3.usermanager.dtos;
 
+import java.io.Serializable;
+
 import com.thirdeye3.usermanager.enums.WorkType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TelegramChatIdDto {
+public class TelegramChatIdDto  implements Serializable {
     private Long id;
 
     @NotNull(message = "WorkType must not be null")
