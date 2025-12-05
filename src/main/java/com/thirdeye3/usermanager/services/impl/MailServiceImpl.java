@@ -123,7 +123,7 @@ public class MailServiceImpl implements MailService {
                 else if(mail.getMailType() == 2)
                 {
                 	helper.setSubject("Recover password - ThirdEye");
-                	helper.setFrom("thirdeye-recover-password@thirdeye3.com");
+                	helper.setFrom("recover-password@thirdeye3.com");
                 }
                 helper.setText(htmlBody, true);
                 mailSender.send(mimeMessage);
@@ -132,6 +132,7 @@ public class MailServiceImpl implements MailService {
             } catch (Exception e) {
                 logger.error("FAILED to send mail to: {}", mail.getUserName());
                 logger.error("Reason: {}", e.getMessage());
+                e.printStackTrace();
             }
             mailRepository.decreaseTries(mail.getId());
         }
