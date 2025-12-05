@@ -38,6 +38,9 @@ public class Mail {
 	@Column(name = "ONE_TIME_PASSWORD", nullable = false)
 	private String otp;
 	
+	@Column(name = "SEND", nullable = false)
+	private Boolean send = false;
+	
 	@Column(name = "SUCCESS", nullable = false)
 	private Boolean success = false;
 	

@@ -41,6 +41,12 @@ public class Scheduler {
         logger.info("Status check response is {}", response.getResponse());
     }
 	
+	@Scheduled(fixedRate = 5000)
+	public void sendMails() {
+		mailService.sendOtp();
+		logger.info("Mails sended");
+    }
+	
 	@Scheduled(fixedRate = 120000)
 	public void removeMails() {
 		mailService.deleteMails();

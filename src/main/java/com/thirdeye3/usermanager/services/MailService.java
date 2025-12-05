@@ -11,4 +11,6 @@ public interface MailService {
 
 	void deleteMails();
 
+	void sendOtp();
+
 }
