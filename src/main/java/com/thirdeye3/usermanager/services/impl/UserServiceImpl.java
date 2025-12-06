@@ -123,9 +123,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        if (!Boolean.TRUE.equals(user.getEmailVerified()))
-            throw new UserNotFoundException("User is unverified");
-
         if (user.getUserName().equals(userName))
             throw new UserNotFoundException("Cannot delete user: " + userName);
 

@@ -44,6 +44,8 @@ public class TelegramChatIdServiceImpl implements TelegramChatIdService {
     }
 
 
+    @CacheEvict(value = "telegramChatIdsByGroupCache", key = "#thresholdGroupId")
+    @Override
     public Long deleteTelegramChatId(Long id, Long requesterId) {
 
         TelegramChatId telegramChatId = telegramChatIdRepository.findById(id)

@@ -44,13 +44,11 @@ public class Scheduler {
 	@Scheduled(fixedRate = 5000)
 	public void sendMails() {
 		mailService.sendOtp();
-		logger.info("Mails sended");
     }
 	
 	@Scheduled(fixedRate = 120000)
 	public void removeMails() {
 		mailService.deleteMails();
-        logger.info("Removed mails");
     }
 	
     @Scheduled(cron = "${thirdeye.scheduler.cronToRefreshData}", zone = "${thirdeye.timezone}")

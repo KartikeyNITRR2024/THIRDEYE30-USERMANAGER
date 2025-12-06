@@ -15,7 +15,8 @@ import com.thirdeye3.usermanager.entities.Mail;
 @Repository
 public interface MailRepository extends CrudRepository<Mail, Long> {
 
-    List<Mail> findAllBySendFalseAndNoOFTriesLeftGreaterThan(Integer noOFTriesLeft);
+	Long countBySendFalseAndNoOFTriesLeftGreaterThan(Integer noOfTriesLeft);
+	List<Mail> findAllBySendFalseAndNoOFTriesLeftGreaterThan(Integer noOFTriesLeft);
 
     @Transactional
     @Modifying
@@ -47,6 +48,9 @@ public interface MailRepository extends CrudRepository<Mail, Long> {
     @Modifying
     @Query("UPDATE Mail m SET m.noOFTriesLeft = m.noOFTriesLeft - 1 WHERE m.id = :id")
     void decreaseTries(Long id);
+    
+    @Query("SELECT COUNT(m) FROM Mail m WHERE m.success = true OR m.noOFTriesLeft <= 0 OR m.expiryTime < :currentTime")
+    long countExpiredOrFailed(LocalDateTime currentTime);
     
     @Transactional
     @Modifying
