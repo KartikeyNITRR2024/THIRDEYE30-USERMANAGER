@@ -10,8 +10,8 @@ public interface UserService {
 	User getUserByUserId(Long userId);
     UserDto updateUser(Long userId, UserDto userDto, Long requesterId);
     void deleteUser(Long userId);
-    void activateUser(Long userId);
-    void deactivateUser(Long userId);
+    UserDto activateUser(Long userId);
+    UserDto deactivateUser(Long userId);
 	List<Long> getActiveUserIds();
 	UserDto getUserDtoByUserId(Long userId, Long requesterId);
 	void addRoleToUser(Long userId, String roleName);

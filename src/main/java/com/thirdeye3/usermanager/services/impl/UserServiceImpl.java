@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @CachePut(value = "userCache", key = "#userId")
     @Override
-    public void activateUser(Long userId) {
+    public UserDto activateUser(Long userId) {
 
         logger.info("Activating user with id={}", userId);
 
@@ -143,13 +143,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UserNotFoundException("Cannot change status of user: " + userName);
 
         user.setActive(true);
-        userRepository.save(user);
+        User saved = userRepository.save(user);
+        return mapper.toDto(saved);
     }
 
 
     @CachePut(value = "userCache", key = "#userId")
     @Override
-    public void deactivateUser(Long userId) {
+    public UserDto deactivateUser(Long userId) {
 
         logger.info("Deactivating user with id={}", userId);
 
@@ -160,7 +161,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UserNotFoundException("Cannot change status of user: " + userName);
 
         user.setActive(false);
-        userRepository.save(user);
+        User saved = userRepository.save(user);
+        return mapper.toDto(saved);
     }
 
 
