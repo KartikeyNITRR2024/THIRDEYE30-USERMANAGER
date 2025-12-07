@@ -1,5 +1,7 @@
 package com.thirdeye3.usermanager.configs;
 
+import io.lettuce.core.ClientOptions;
+import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -11,7 +13,6 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
-
 import java.time.Duration;
 
 @Configuration
@@ -21,14 +22,14 @@ public class RedisConfig {
     @Primary
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-
         template.setConnectionFactory(factory);
 
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
         template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
+        template.setValueSerializer(serializer);
+        template.setHashValueSerializer(serializer);
 
         template.afterPropertiesSet();
         return template;
@@ -38,7 +39,7 @@ public class RedisConfig {
     public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(5))   // default TTL
+                .entryTtl(Duration.ofMinutes(10))
                 .disableCachingNullValues()
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair
@@ -48,5 +49,18 @@ public class RedisConfig {
         return RedisCacheManager.builder(factory)
                 .cacheDefaults(config)
                 .build();
+    }
+
+    @Bean
+    public LettuceClientConfigurationBuilderCustomizer lettuceCustomizer() {
+        return builder -> builder
+                .commandTimeout(Duration.ofSeconds(60))
+                .shutdownTimeout(Duration.ofMillis(200))
+                .clientOptions(
+                        ClientOptions.builder()
+                                .autoReconnect(true)
+                                .pingBeforeActivateConnection(true)
+                                .build()
+                );
     }
 }
