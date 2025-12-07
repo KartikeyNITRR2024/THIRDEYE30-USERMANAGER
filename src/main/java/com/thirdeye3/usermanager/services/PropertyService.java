@@ -21,4 +21,10 @@ public interface PropertyService {
 	Long getOtpExpiryTimeInMinutes();
 
 	Long getMaximumNoOfTriesToSendOtp();
+
+	Integer getMaximumNoOfStocksPerGroup();
+
+	Boolean getSelectAllStocks();
+
+	Boolean getIsZeroAllowed();
 }

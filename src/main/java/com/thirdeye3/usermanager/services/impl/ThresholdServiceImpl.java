@@ -47,6 +47,11 @@ public class ThresholdServiceImpl implements ThresholdService {
     public ThresholdDto createThreshold(Long thresoldGroupId, ThresholdDto thresholdDto, Long requesterId) {
 
         logger.info("Creating threshold for groupId={}", thresoldGroupId);
+        
+        if(!propertyService.getIsZeroAllowed() && thresholdDto.getPriceGap() == 0d)
+        {
+        	throw new ThresholdNotFoundException("Price Gap cannot be Zero");
+        }
 
         Threshold entity = mapper.toEntity(thresholdDto);
 

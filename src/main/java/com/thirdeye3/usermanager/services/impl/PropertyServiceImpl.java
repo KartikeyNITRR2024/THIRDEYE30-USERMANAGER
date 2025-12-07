@@ -17,6 +17,8 @@ import com.thirdeye3.usermanager.exceptions.PropertyFetchException;
 import com.thirdeye3.usermanager.externalcontollers.PropertyManagerClient;
 import com.thirdeye3.usermanager.services.PropertyService;
 
+import jakarta.persistence.Column;
+
 @Service
 public class PropertyServiceImpl implements PropertyService {
     private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
@@ -32,6 +34,9 @@ public class PropertyServiceImpl implements PropertyService {
     private Set<Long> timeGapListForThresoldInSeconds = null;
     private Long otpExpiryTimeInMinutes = null;
     private Long maximumNoOfTriesToSendOtp = null;
+    private Integer maximumNoOfStocksPerGroup = null;
+    private Boolean selectAllStocks = null;
+    private Boolean isZeroAllowed = null;
 
     @Override
     public void fetchProperties() {
@@ -52,8 +57,11 @@ public class PropertyServiceImpl implements PropertyService {
             }
             otpExpiryTimeInMinutes = ((Number) properties.getOrDefault("OTP_EXPIRY_TIME_IN_MINUTES", 5L)).longValue();
             maximumNoOfTriesToSendOtp = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_TRIES_TO_SEND_OTP", 5L)).longValue();
-            logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}, otpExpiryTimeInMinutes {}, maximumNoOfTriesToSendOtp {}",
-                    properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds, otpExpiryTimeInMinutes, maximumNoOfTriesToSendOtp);
+            maximumNoOfStocksPerGroup = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_STOCK_PER_GROUP", 10)).intValue();
+            selectAllStocks = (((Number) properties.getOrDefault("SELECT_ALL_STOCKS", 0)).intValue() == 1?true:false);
+            isZeroAllowed = (((Number) properties.getOrDefault("IS_ZERO_ALLOWED", 0)).intValue() == 1?true:false);
+            logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}, otpExpiryTimeInMinutes {}, maximumNoOfTriesToSendOtp {}, maximumNoOfStocksPerGroup {}, selectAllStocks {}, isZeroAllowed {}",
+                    properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds, otpExpiryTimeInMinutes, maximumNoOfTriesToSendOtp, maximumNoOfStocksPerGroup, selectAllStocks, isZeroAllowed);
         } else {
             properties = new HashMap<>();
             logger.error("Failed to fetch properties");
@@ -123,6 +131,31 @@ public class PropertyServiceImpl implements PropertyService {
     	}
         return maximumNoOfTriesToSendOtp;
     }
-    
-    
+
+    @Override
+	public Integer getMaximumNoOfStocksPerGroup() {
+		if(maximumNoOfStocksPerGroup == null)
+    	{
+    		fetchProperties();
+    	}
+		return maximumNoOfStocksPerGroup;
+	}
+
+    @Override
+	public Boolean getSelectAllStocks() {
+		if(selectAllStocks == null)
+    	{
+    		fetchProperties();
+    	}
+		return selectAllStocks;
+	}
+
+    @Override
+	public Boolean getIsZeroAllowed() {
+		if(isZeroAllowed == null)
+    	{
+    		fetchProperties();
+    	}
+		return isZeroAllowed;
+	}
 }
