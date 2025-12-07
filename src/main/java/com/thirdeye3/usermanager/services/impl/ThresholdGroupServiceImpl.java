@@ -131,11 +131,6 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
     @Override
     public ThresholdGroupDto updateThresholdGroup(Long id, ThresholdGroupDto thresholdGroupDto, Long requesterId) {
         logger.info("Updating ThresholdGroup id={}", id);
-        
-        if((!propertyService.getSelectAllStocks() && thresholdGroupDto.getAllStocks()) || (thresholdGroupDto.getStockList().length()/5 > propertyService.getMaximumNoOfStocksPerGroup()))
-        {
-        	throw new ThresholdGroupNotFoundException("Maximum "+propertyService.getMaximumNoOfStocksPerGroup()+" stocks is allowed per group");
-        }
 
         int type1 = -1;
         int type2 = -1;
@@ -154,6 +149,11 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
 
         if (!thresholdGroupDto.getActive().equals(existing.getActive())) {
             type1 = thresholdGroupDto.getActive() ? 4 : 3;
+        }
+        
+        if((!propertyService.getSelectAllStocks() && thresholdGroupDto.getAllStocks()) || (thresholdGroupDto.getStockList().length()/5 > propertyService.getMaximumNoOfStocksPerGroup()))
+        {
+        	throw new ThresholdGroupNotFoundException("Maximum "+propertyService.getMaximumNoOfStocksPerGroup()+" stocks is allowed per group");
         }
 
         if (!thresholdGroupDto.getAllStocks().equals(existing.getAllStocks()) ||
