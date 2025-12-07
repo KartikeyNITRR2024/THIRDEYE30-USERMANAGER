@@ -18,5 +18,6 @@ public interface UserService {
 	void removeRoleFromUser(Long userId, String roleName);
 	List<UserDto> getAllUsers();
 	void deleteAllUnverifiedUser();
+	Boolean isAdmin(Long requesterId);
 }
 

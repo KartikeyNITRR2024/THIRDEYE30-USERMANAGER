@@ -36,7 +36,7 @@ public class PropertyServiceImpl implements PropertyService {
     private Long maximumNoOfTriesToSendOtp = null;
     private Integer maximumNoOfStocksPerGroup = null;
     private Boolean selectAllStocks = null;
-    private Boolean isZeroAllowed = null;
+    private Integer isZeroAllowed = null;
 
     @Override
     public void fetchProperties() {
@@ -59,7 +59,7 @@ public class PropertyServiceImpl implements PropertyService {
             maximumNoOfTriesToSendOtp = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_TRIES_TO_SEND_OTP", 5L)).longValue();
             maximumNoOfStocksPerGroup = ((Number) properties.getOrDefault("MAXIMUM_NO_OF_STOCK_PER_GROUP", 10)).intValue();
             selectAllStocks = (((Number) properties.getOrDefault("SELECT_ALL_STOCKS", 0)).intValue() == 1?true:false);
-            isZeroAllowed = (((Number) properties.getOrDefault("IS_ZERO_ALLOWED", 0)).intValue() == 1?true:false);
+            isZeroAllowed = ((Number) properties.getOrDefault("IS_ZERO_ALLOWED", 0)).intValue();
             logger.info("Request {}, maximumNoOfUsers {}, maximumNoOfThresoldPerGroup {} , maximumNoOfHoldedStockPerUser {}, maximumNoOfGroupPerUser {}, timeGapListForThresoldInSeconds {}, otpExpiryTimeInMinutes {}, maximumNoOfTriesToSendOtp {}, maximumNoOfStocksPerGroup {}, selectAllStocks {}, isZeroAllowed {}",
                     properties, maximumNoOfUsers, maximumNoOfThresoldPerGroup, maximumNoOfHoldedStockPerUser, maximumNoOfGroupPerUser, timeGapListForThresoldInSeconds, otpExpiryTimeInMinutes, maximumNoOfTriesToSendOtp, maximumNoOfStocksPerGroup, selectAllStocks, isZeroAllowed);
         } else {
@@ -151,7 +151,7 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
     @Override
-	public Boolean getIsZeroAllowed() {
+	public Integer getIsZeroAllowed() {
 		if(isZeroAllowed == null)
     	{
     		fetchProperties();

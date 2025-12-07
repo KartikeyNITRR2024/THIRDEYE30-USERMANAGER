@@ -40,6 +40,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private String userName;
 
     private final Mapper mapper = new Mapper();
+    
+    @Override
+    public Boolean isAdmin(Long requesterId)
+    {
+    	User user = userRepository.findById(requesterId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + requesterId));
+    	
+    	if (user.getUserName().equals(userName))
+    		return true;
+    	
+    	return false;
+    }
 
 
     @Cacheable(value = "userCache", key = "#userId")

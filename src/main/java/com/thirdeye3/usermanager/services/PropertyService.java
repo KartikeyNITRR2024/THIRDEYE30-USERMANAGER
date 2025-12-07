@@ -26,5 +26,5 @@ public interface PropertyService {
 
 	Boolean getSelectAllStocks();
 
-	Boolean getIsZeroAllowed();
+	Integer getIsZeroAllowed();
 }

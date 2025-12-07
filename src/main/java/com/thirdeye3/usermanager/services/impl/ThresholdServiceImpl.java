@@ -8,6 +8,7 @@ import com.thirdeye3.usermanager.repositories.ThresholdRepository;
 import com.thirdeye3.usermanager.services.PropertyService;
 import com.thirdeye3.usermanager.services.ThresholdGroupService;
 import com.thirdeye3.usermanager.services.ThresholdService;
+import com.thirdeye3.usermanager.services.UserService;
 import com.thirdeye3.usermanager.utils.Mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class ThresholdServiceImpl implements ThresholdService {
 
     @Autowired
     private PropertyService propertyService;
+    
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private Mapper mapper;
@@ -48,7 +52,12 @@ public class ThresholdServiceImpl implements ThresholdService {
 
         logger.info("Creating threshold for groupId={}", thresoldGroupId);
         
-        if(!propertyService.getIsZeroAllowed() && thresholdDto.getPriceGap() == 0d)
+        if(propertyService.getIsZeroAllowed() == 1 && thresholdDto.getPriceGap() == 0d)
+        {
+        	throw new ThresholdNotFoundException("Price Gap cannot be Zero");
+        }
+        
+        if(propertyService.getIsZeroAllowed() == 2 && !userService.isAdmin(requesterId) && thresholdDto.getPriceGap() == 0d)
         {
         	throw new ThresholdNotFoundException("Price Gap cannot be Zero");
         }
