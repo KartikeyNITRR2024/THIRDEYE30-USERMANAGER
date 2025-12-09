@@ -64,6 +64,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${thirdeye.jwt.token.starter}")
     private String tokenStarter;
+    
+    @Value("${thirdeye.dummy.username}")
+    private String dummyUsername;
+    
+    @Value("${thirdeye.dummy.password}")
+    private String dummyPassword;
 
     @Override
     public RegisterResponsePayload register(AuthUserPayload authUserPayload) {
@@ -184,6 +190,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponsePayload login(AuthUserPayload authUserPayload) {
+    	
+    	if(authUserPayload.getUserName().equals(dummyUsername) && authUserPayload.getPassword().equals(dummyPassword))
+    	{
+    		return null;
+    	}
+    	
         logger.info("Login attempt for username: {}", authUserPayload.getUserName());
 
         try {
