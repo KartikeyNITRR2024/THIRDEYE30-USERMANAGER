@@ -69,7 +69,8 @@ public class ThresholdGroupController {
     public Response<List<ThresholdGroupDto>> getThresholdGroupsByUser(@PathVariable("userId") Long userId,
             @RequestHeader(value = "TOKEN-USER-ID", required = false) Long requesterId) {
         logger.info("Fetching threshold groups for user {}", userId);
-        List<ThresholdGroupDto> groups = thresholdGroupService.getThresholdGroupsByUserId(userId, requesterId);
+        //List<ThresholdGroupDto> groups = thresholdGroupService.getThresholdGroupsByUserId(userId, requesterId);
+        List<ThresholdGroupDto> groups = thresholdGroupService.getLiteGroupsByUserIdUsingProjection(userId, requesterId);
         return new Response<>(true, 0, null, groups);
     }
     

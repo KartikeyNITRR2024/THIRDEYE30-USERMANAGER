@@ -7,6 +7,7 @@ import com.thirdeye3.usermanager.entities.ThresholdGroup;
 import com.thirdeye3.usermanager.entities.User;
 import com.thirdeye3.usermanager.exceptions.ForbiddenException;
 import com.thirdeye3.usermanager.exceptions.ThresholdGroupNotFoundException;
+import com.thirdeye3.usermanager.projections.ThresholdGroupProjection;
 import com.thirdeye3.usermanager.repositories.ThresholdGroupRepository;
 import com.thirdeye3.usermanager.services.MessengerService;
 import com.thirdeye3.usermanager.services.PropertyService;
@@ -229,6 +230,18 @@ public class ThresholdGroupServiceImpl implements ThresholdGroupService {
         List<ThresholdGroup> groups = thresholdGroupRepository.findByUserUserId(userId);
         return mapper.toThresholdGroupDtoList(groups);
     }
+    
+    @Cacheable(value = "thresholdGroupsCache", key = "#userId")
+    @Override
+	public List<ThresholdGroupDto> getLiteGroupsByUserIdUsingProjection(Long userId, Long requesterId) {
+    	logger.info("Fetching ThresholdGroups for userId={}", userId);
+        if(requesterId.longValue() != userId.longValue()) 
+        {
+        	throw new ForbiddenException("Forbidden");
+        }
+        List<ThresholdGroupProjection> projections = thresholdGroupRepository.findProjectionByUserId(userId);
+        return mapper.toThresholdGroupDtoList1(projections);
+	}
 
     @Override
     public Map<Long, ThresholdGroupDto> getAllActiveGroups(Integer type) {

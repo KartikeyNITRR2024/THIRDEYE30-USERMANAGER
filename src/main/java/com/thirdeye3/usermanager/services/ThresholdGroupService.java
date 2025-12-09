@@ -2,6 +2,7 @@ package com.thirdeye3.usermanager.services;
 
 import com.thirdeye3.usermanager.dtos.ThresholdGroupDto;
 import com.thirdeye3.usermanager.entities.ThresholdGroup;
+import com.thirdeye3.usermanager.projections.ThresholdGroupProjection;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ public interface ThresholdGroupService {
     ThresholdGroupDto getThresholdGroup(Long id, Long requesterId);
 
     List<ThresholdGroupDto> getThresholdGroupsByUserId(Long userId, Long requesterId);
+    
+    List<ThresholdGroupDto> getLiteGroupsByUserIdUsingProjection(Long userId, Long requesterId);
 
 	ThresholdGroup getThresholdGroupByThresoldGroupId(Long thresholdGroupId);
 	

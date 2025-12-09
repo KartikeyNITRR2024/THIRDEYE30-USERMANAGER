@@ -2,6 +2,8 @@ package com.thirdeye3.usermanager.utils;
 
 import com.thirdeye3.usermanager.dtos.*;
 import com.thirdeye3.usermanager.entities.*;
+import com.thirdeye3.usermanager.projections.ThresholdGroupProjection;
+
 import java.util.Set;
 
 import java.util.List;
@@ -102,6 +104,17 @@ public class Mapper {
         return dto;
     }
     
+    public ThresholdGroupDto toDto(ThresholdGroupProjection projection) {
+        if (projection == null) {
+            return null;
+        }
+        ThresholdGroupDto dto = new ThresholdGroupDto();
+        dto.setGroupName(projection.getGroupName());
+        dto.setId(projection.getId());
+        dto.setActive(projection.getActive());
+        return dto;
+    }
+    
     public Threshold toEntity(ThresholdDto dto) {
         if (dto == null) {
             return null;
@@ -177,6 +190,15 @@ public class Mapper {
             return null;
         }
         return entities.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+    
+    public List<ThresholdGroupDto> toThresholdGroupDtoList1(List<ThresholdGroupProjection> projections) {
+        if (projections == null) {
+            return null;
+        }
+        return projections.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
