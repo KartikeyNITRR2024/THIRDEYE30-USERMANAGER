@@ -1,5 +1,6 @@
 package com.thirdeye3.usermanager.services.impl;
 
+import com.thirdeye3.usermanager.dtos.Response;
 import com.thirdeye3.usermanager.dtos.ThresholdDto;
 import com.thirdeye3.usermanager.dtos.ThresholdGroupDto;
 import com.thirdeye3.usermanager.externalcontollers.StockViewerClient;
@@ -27,11 +28,11 @@ public class StockViewerServiceImpl implements StockViewerService {
     	logger.info("Async call triggered: updating thresholdGroupDto for groupid={}",
     			thresholdGroupDto.getId());
 
-        try {
-            stockViewer.updateOrAddThresholdGroupDto(thresholdGroupDto);
-            logger.info("Successfully updated thresholdGroupDto in StockViewer for groupid={}", thresholdGroupDto.getId());
-        } catch (Exception e) {
-            logger.error("Failed to update StockViewer for groupid={}. Reason: {}", thresholdGroupDto.getId(), e.getMessage(), e);
+    	Response<Boolean> finalResult = stockViewer.updateOrAddThresholdGroupDto(thresholdGroupDto); 
+        if (finalResult.isSuccess()) {
+            logger.info("Successfully broadcasted update to all StockViewer instances.");
+        } else {
+            logger.warn("Broadcast completed with issues: {}", finalResult.getErrorMessage());
         }
 	}
 }
